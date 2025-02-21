@@ -28,10 +28,7 @@ export default function RootLayout({
             <TRPCReactProvider>
               <Web3Provider>
                 <Navbar />
-                <div className="container mx-auto block sm:flex sm:gap-24">
-                  <SideNav />
-                  {children}
-                </div>
+                {children}
               </Web3Provider>
             </TRPCReactProvider>
           </UserProvider>
