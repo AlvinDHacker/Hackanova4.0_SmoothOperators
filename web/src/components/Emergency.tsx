@@ -56,10 +56,10 @@ const EmergencyCard = ({ article }: any) => (
         </span>
       </div>
     </CardContent>
-    <CardFooter className="border-t">
+    <CardFooter className="border-t pt-6">
       <div className="flex w-full justify-end">
         <a href={article.link} target="_blank" rel="noopener noreferrer">
-          <Button className='bg-[#56b76c]' size="sm">
+          <Button className='dark:bg-green-700 bg-green-600 text-white hover:text-black' size="sm">
             Read More <ExternalLink className="ml-2 h-4 w-4" />
           </Button>
         </a>
@@ -203,7 +203,7 @@ const Emergency = () => {
       )}
 
       <div className="flex justify-center">
-        <Link href="/disasters">
+        <Link href="/emergencies">
           <Button variant="outline" size="lg">
             View All Emergencies
             <ChevronRight className="ml-2 h-4 w-4" />
