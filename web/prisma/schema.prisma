@@ -37,16 +37,12 @@ model User {
     did      String?  @unique // DID is now optional
     walletId String   @unique // Wallet address is now unique and required for SIWE
 
-    disasters Disaster[] // Relation for NGOs involved in disasters
-
     accounts Account[]
     sessions Session[]
     posts    Post[]
 
     // Relation to NGOs (Only if userType is NGO)
-    ngo        NGO?
-    Disaster   Disaster? @relation(fields: [disasterId], references: [id])
-    disasterId String?
+    ngo NGO?
 }
 
 model NGO {
@@ -68,7 +64,7 @@ model NGO {
     user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     // Many-to-many relation with disasters
-    disasters Disaster[] @relation(name: "NGODisasters")
+    ngoDisasters NGOOnDisaster[]
 
     // Many-to-many relation with focus areas
     focusAreas NGOFocusArea[]
@@ -79,6 +75,15 @@ model NGOFocusArea {
     ngo       NGO       @relation(fields: [ngoId], references: [id], onDelete: Cascade)
     ngoId     String
     focusArea FocusArea
+}
+
+// Explicit Many-to-Many Relation Between NGO and Disaster
+model NGOOnDisaster {
+    id         String   @id @default(cuid())
+    ngo        NGO      @relation(fields: [ngoId], references: [id], onDelete: Cascade)
+    ngoId      String
+    disaster   Disaster @relation(fields: [disasterId], references: [id], onDelete: Cascade)
+    disasterId String
 }
 
 model Disaster {
@@ -92,10 +97,8 @@ model Disaster {
     createdAt    DateTime       @default(now())
     updatedAt    DateTime       @updatedAt
 
-    ngos  User[]  @relation(name: "DisasterNGOs") // Many-to-many relation with NGOs
-    User  User[]
-    NGO   NGO?    @relation(fields: [nGOId], references: [id])
-    nGOId String?
+    // Many-to-Many with NGOs
+    ngoDisasters NGOOnDisaster[]
 
     @@index([name])
 }

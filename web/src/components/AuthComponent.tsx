@@ -15,6 +15,7 @@ interface UserProviderProps {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 interface SessUser {
+  walletId: string;
   id: string;
   name?: string | null | undefined;
   email?: string | null | undefined;
