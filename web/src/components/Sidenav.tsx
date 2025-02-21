@@ -1,6 +1,15 @@
 "use client";
 import { cn } from "../lib/utils";
-import { BarChart2, ClipboardPen, Files, Search, Globe } from "lucide-react";
+import {
+  BarChart2,
+  ClipboardPen,
+  Files,
+  Search,
+  Globe,
+  Map,
+  Earth,
+  Home,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -15,13 +24,13 @@ export default function SideNav() {
             className={cn(
               "flex min-h-0 flex-1 flex-row gap-3 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
               {
-                "text-green-600": pathname.endsWith("/search"),
+                "text-green-600": pathname.endsWith("/home"),
               },
             )}
-            href="/dashboard/search"
+            href="/home"
           >
-            <Search />
-            Search
+            <Home />
+            Home
           </Link>
         </li>
         <li>
@@ -29,13 +38,13 @@ export default function SideNav() {
             className={cn(
               "flex min-h-0 flex-1 flex-row gap-3 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
               {
-                "text-green-600": pathname.endsWith("/documents"),
+                "text-green-600": pathname.endsWith("/disasters"),
               },
             )}
-            href="/dashboard/documents"
+            href="/disasters"
           >
-            <Files />
-            Documents
+            <Earth />
+            Disasters
           </Link>
         </li>
         <li>
@@ -43,15 +52,16 @@ export default function SideNav() {
             className={cn(
               "flex min-h-0 flex-1 flex-row gap-3 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
               {
-                "text-green-600": pathname.endsWith("/finnosearch"),
+                "text-green-600": pathname.endsWith("/map"),
               },
             )}
-            href="/dashboard/finnosearch"
+            href="/disasters/map"
           >
-            <Globe />
-            FinnoSearch
+            <Map />
+            Maps
           </Link>
         </li>
+
         <li>
           <Link
             className={cn(
@@ -60,7 +70,7 @@ export default function SideNav() {
                 "text-green-600": pathname.endsWith("/notes"),
               },
             )}
-            href="/dashboard/notes"
+            href="/disasters/notes"
           >
             <ClipboardPen />
             Notes
@@ -74,29 +84,13 @@ export default function SideNav() {
                 "text-green-600": pathname.endsWith("/analytics"),
               },
             )}
-            href="/dashboard/analytics"
+            href="/disasters/analytics"
           >
             <BarChart2 />
             Analytics
           </Link>
         </li>
       </ul>
-      {/* <div className="fixed w-full bottom-0">
-        <div className="flex w-[70%] mx-auto bg-green-500 p-3 justify-between sm:hidden">
-          <div>
-            <Search />
-          </div>
-          <div>
-            <Files />
-          </div>
-          <div>
-            <ClipboardPen />
-          </div>
-          <div>
-            <BarChart2 />
-          </div>
-        </div>
-      </div> */}
     </nav>
   );
 }

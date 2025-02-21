@@ -14,19 +14,19 @@ import {
 } from "~/components/ui/dialog";
 import { Separator } from "../ui/separator";
 
-const DonorLogin = () => {
+const VendorLogin = () => {
   const img = `https://cdn.simpleicons.org/ethereum/ethereum`;
   return (
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="outline">Login as Donor</Button>
+          <Button variant="outline">Login as a Vendor</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Login as a Donor</DialogTitle>
+            <DialogTitle>Login as a Vendor</DialogTitle>
             <DialogDescription>
-              Login here to Donate for a Good Cause
+              Login here to help NGO&apos;s reach out for a Good Cause
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -40,6 +40,10 @@ const DonorLogin = () => {
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="name">Aadhar Card No.</Label>
+              <Input id="name" />
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="name">GST No.</Label>
               <Input id="name" />
             </div>
           </div>
@@ -56,4 +60,4 @@ const DonorLogin = () => {
   );
 };
 
-export default DonorLogin;
+export default VendorLogin;
