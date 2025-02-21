@@ -1,56 +1,107 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { type DefaultSession, type NextAuthConfig } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
-
+import { type NextAuthConfig } from "next-auth";
 import { db } from "~/server/db";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { SiweMessage } from "siwe";
+import type { AdapterUser } from "next-auth";
+import { UserType } from "@prisma/client";
 
-/**
- * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
- * object and keep type safety.
- *
- * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
- */
 declare module "next-auth" {
-  interface Session extends DefaultSession {
+  interface Session {
     user: {
       id: string;
-      // ...other properties
-      // role: UserRole;
-    } & DefaultSession["user"];
+      name?: string | null;
+      email?: string | null;
+      walletId: string;
+    };
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface AdapterUser {
+    walletId?: string;
+  }
+
+  interface JWT {
+    sub?: string;
+    walletId?: string;
+  }
 }
 
-/**
- * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
- *
- * @see https://next-auth.js.org/configuration/options
- */
-export const authConfig = {
+export const authConfig: NextAuthConfig = {
+  session: {
+    strategy: "jwt", // Force using JWT session storage
+  },
   providers: [
-    DiscordProvider,
-    /**
-     * ...add more providers here.
-     *
-     * Most other providers require a bit more work than the Discord provider. For example, the
-     * GitHub provider requires you to add the `refresh_token_expires_in` field to the Account
-     * model. Refer to the NextAuth.js docs for the provider you want to use. Example:
-     *
-     * @see https://next-auth.js.org/providers/github
-     */
+    CredentialsProvider({
+      name: "Ethereum",
+      credentials: {
+        message: { label: "Message", type: "text" },
+        signature: { label: "Signature", type: "text" },
+      },
+      async authorize(credentials) {
+        try {
+          if (!credentials?.message || !credentials?.signature) {
+            throw new Error("Missing credentials");
+          }
+
+          const message = credentials.message as string;
+          const signature = credentials.signature as string;
+
+          // Verify SIWE message
+          const siwe = new SiweMessage(JSON.parse(message));
+          const result = await siwe.verify({ signature });
+
+          if (!result.success) return null;
+
+          // Check if user exists in the database by walletId
+          let user = await db.user.findUnique({
+            where: { walletId: siwe.address },
+          });
+
+          console.log(user);
+          // If user doesn't exist, create a new one
+          if (!user) {
+            user = await db.user.create({
+              data: {
+                userType: UserType.DONOR,
+                walletId: siwe.address,
+                name: siwe.address, // Default name as wallet address
+              },
+            });
+          }
+
+          return {
+            id: user.id,
+            name: user.name,
+            walletId: user.walletId,
+          };
+        } catch (error) {
+          console.error("SIWE Verification Failed:", error);
+          return null;
+        }
+      },
+    }),
   ],
   adapter: PrismaAdapter(db),
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    async session({ session, token }) {
+      if (token.sub) {
+        session.user = {
+          id: token.sub,
+          walletId: token.walletId,
+          name: session.user?.name ?? null, // Preserve existing name if present
+          email: session.user?.email ?? null, // Preserve existing email if present
+          emailVerified: new Date(),
+        };
+      }
+      return session;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.sub = user.id;
+        token.walletId = user.walletId || "";
+      }
+      return token;
+    },
   },
-} satisfies NextAuthConfig;
+  secret: process.env.AUTH_SECRET,
+};
