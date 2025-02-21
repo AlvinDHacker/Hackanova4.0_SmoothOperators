@@ -5,6 +5,7 @@ import { LatestPost } from "~/app/_components/post";
 import DisasterVerify from "~/components/DisasterVerify";
 import DonorLogin from "~/components/Login/DonorLogin";
 import NgoLogin from "~/components/Login/NgoLogin";
+import VendorLogin from "~/components/Login/VendorLogin";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
@@ -65,6 +66,7 @@ export default async function Home() {
       <DisasterVerify />
       <DonorLogin />
       <NgoLogin />
+      <VendorLogin />
     </div>
   );
 }
