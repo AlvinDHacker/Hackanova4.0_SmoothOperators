@@ -29,21 +29,24 @@ enum FocusArea {
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    userType      UserType
-    did           String    @unique
-    walletId      String
+    id       String   @id @default(cuid())
+    name     String?
+    email    String?  @unique
+    image    String?
+    userType UserType
+    did      String?  @unique // DID is now optional
+    walletId String   @unique // Wallet address is now unique and required for SIWE
+
+    disasters Disaster[] // Relation for NGOs involved in disasters
 
     accounts Account[]
     sessions Session[]
     posts    Post[]
 
     // Relation to NGOs (Only if userType is NGO)
-    ngo NGO?
+    ngo        NGO?
+    Disaster   Disaster? @relation(fields: [disasterId], references: [id])
+    disasterId String?
 }
 
 model NGO {
@@ -89,8 +92,10 @@ model Disaster {
     createdAt    DateTime       @default(now())
     updatedAt    DateTime       @updatedAt
 
-    // Many-to-many relation with NGOs
-    ngos NGO[] @relation(name: "NGODisasters")
+    ngos  User[]  @relation(name: "DisasterNGOs") // Many-to-many relation with NGOs
+    User  User[]
+    NGO   NGO?    @relation(fields: [nGOId], references: [id])
+    nGOId String?
 
     @@index([name])
 }
@@ -107,7 +112,7 @@ model Post {
     @@index([name])
 }
 
-// Necessary for NextAuth
+// Necessary for NextAuth + SIWE
 model Account {
     id                       String  @id @default(cuid())
     userId                   String
@@ -115,14 +120,16 @@ model Account {
     provider                 String
     providerAccountId        String
     refresh_token            String? @db.Text
-    access_token             String? // @db.Text
+    access_token             String?
     expires_at               Int?
     token_type               String?
     scope                    String?
-    id_token                 String? // @db.Text
+    id_token                 String?
     session_state            String?
     user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
     refresh_token_expires_in Int?
+
+    nonce String? // Nonce for SIWE authentication
 
     @@unique([provider, providerAccountId])
 }
