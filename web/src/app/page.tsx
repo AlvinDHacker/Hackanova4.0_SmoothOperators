@@ -4,6 +4,7 @@ import { LineShadowText } from "~/components/ui/line-shadow-text";
 import { IconCloud } from "~/components/ui/icon-cloud";
 import { AnimatedListDemo } from "~/components/ui/AnimatedListDemo";
 import HeroTerminal from "~/components/HeroTerminal";
+import DonorLogin from "~/components/Login/DonorLogin";
 
 const slugs = [
   "paypal",
@@ -87,18 +88,7 @@ export default async function Home() {
                 querying of financial documents and data.
               </p>
 
-              {/* <Authenticated>
-              <Link href={"/dashboard"}>
-                <ConfettiButton className="gap-3">
-                  Journey with us <ExternalLink />
-                </ConfettiButton>
-              </Link>
-            </Authenticated>
-            <Unauthenticated>
-              <Button>
-                <SignInButton />
-              </Button>
-            </Unauthenticated> */}
+              <DonorLogin />
             </div>
           </div>
 
