@@ -24,10 +24,10 @@ export default function SideNav() {
             className={cn(
               "flex min-h-0 flex-1 flex-row gap-3 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
               {
-                "text-green-600": pathname.endsWith("/home"),
+                "text-green-600": pathname.endsWith("/"),
               },
             )}
-            href="/home"
+            href="/"
           >
             <Home />
             Home
@@ -38,13 +38,13 @@ export default function SideNav() {
             className={cn(
               "flex min-h-0 flex-1 flex-row gap-3 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
               {
-                "text-green-600": pathname.endsWith("/disasters"),
+                "text-green-600": pathname.endsWith("/emergencies"),
               },
             )}
-            href="/disasters"
+            href="/emergencies"
           >
             <Earth />
-            Disasters
+            Emergency
           </Link>
         </li>
         <li>
@@ -55,7 +55,7 @@ export default function SideNav() {
                 "text-green-600": pathname.endsWith("/map"),
               },
             )}
-            href="/disasters/map"
+            href="/emergencies/map"
           >
             <Map />
             Maps
@@ -70,7 +70,7 @@ export default function SideNav() {
                 "text-green-600": pathname.endsWith("/notes"),
               },
             )}
-            href="/disasters/notes"
+            href="/emergencies/notes"
           >
             <ClipboardPen />
             Notes
@@ -84,7 +84,7 @@ export default function SideNav() {
                 "text-green-600": pathname.endsWith("/analytics"),
               },
             )}
-            href="/disasters/analytics"
+            href="/emergencies/analytics"
           >
             <BarChart2 />
             Analytics

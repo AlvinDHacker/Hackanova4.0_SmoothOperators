@@ -20,7 +20,6 @@ export default function DashboardLayout({
     <div>
       <div className="container mx-auto block sm:flex sm:gap-24">
         <SideNav />
-
         {children}
       </div>
     </div>
