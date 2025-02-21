@@ -29,14 +29,13 @@ enum FocusArea {
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    userType      UserType
-    did           String    @unique
-    walletId      String
+    id       String   @id @default(cuid())
+    name     String?
+    email    String?  @unique
+    image    String?
+    userType UserType
+    did      String?  @unique // DID is now optional
+    walletId String   @unique // Wallet address is now unique and required for SIWE
 
     accounts Account[]
     sessions Session[]
@@ -65,7 +64,7 @@ model NGO {
     user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     // Many-to-many relation with disasters
-    disasters Disaster[] @relation(name: "NGODisasters")
+    ngoDisasters NGOOnDisaster[]
 
     // Many-to-many relation with focus areas
     focusAreas NGOFocusArea[]
@@ -76,6 +75,15 @@ model NGOFocusArea {
     ngo       NGO       @relation(fields: [ngoId], references: [id], onDelete: Cascade)
     ngoId     String
     focusArea FocusArea
+}
+
+// Explicit Many-to-Many Relation Between NGO and Disaster
+model NGOOnDisaster {
+    id         String   @id @default(cuid())
+    ngo        NGO      @relation(fields: [ngoId], references: [id], onDelete: Cascade)
+    ngoId      String
+    disaster   Disaster @relation(fields: [disasterId], references: [id], onDelete: Cascade)
+    disasterId String
 }
 
 model Disaster {
@@ -89,8 +97,8 @@ model Disaster {
     createdAt    DateTime       @default(now())
     updatedAt    DateTime       @updatedAt
 
-    // Many-to-many relation with NGOs
-    ngos NGO[] @relation(name: "NGODisasters")
+    // Many-to-Many with NGOs
+    ngoDisasters NGOOnDisaster[]
 
     @@index([name])
 }
@@ -107,7 +115,7 @@ model Post {
     @@index([name])
 }
 
-// Necessary for NextAuth
+// Necessary for NextAuth + SIWE
 model Account {
     id                       String  @id @default(cuid())
     userId                   String
@@ -115,14 +123,16 @@ model Account {
     provider                 String
     providerAccountId        String
     refresh_token            String? @db.Text
-    access_token             String? // @db.Text
+    access_token             String?
     expires_at               Int?
     token_type               String?
     scope                    String?
-    id_token                 String? // @db.Text
+    id_token                 String?
     session_state            String?
     user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
     refresh_token_expires_in Int?
+
+    nonce String? // Nonce for SIWE authentication
 
     @@unique([provider, providerAccountId])
 }

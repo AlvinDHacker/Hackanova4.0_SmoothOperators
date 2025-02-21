@@ -33,19 +33,14 @@ const Navbar = () => {
               <ShieldCheck className="text-green-600" />
               Relief ResQ
             </Link>
-
-            {/* <nav className="sm:flex hidden items-center gap-8">
-            <OrganizationSwitcher />
-
-            <Authenticated>
-              <Link href="/dashboard" className="text-sm hover:underline">
-                Dashboard
-              </Link>
-            </Authenticated>
-          </nav> */}
           </div>
 
           <div className="flex items-center gap-4">
+            <Link href={"/emergencies"}>
+              <div className="hidden items-center gap-8 hover:text-green-600 sm:flex">
+                Emergencies
+              </div>
+            </Link>
             <ModeToggle />
 
             {/* <HeaderActions /> */}

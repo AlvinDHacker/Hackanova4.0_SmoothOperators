@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { type Location } from "~/types/map";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -18,22 +18,24 @@ const Map = () => {
       rating: 4.5,
       openingHours: "9:00 AM - 6:00 PM",
       features: ["WiFi", "Parking"],
-      reviews: []
+      reviews: [],
     },
     // Add more locations as needed
   ];
 
   const defaultIcon = new Icon({
-    iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+    iconUrl:
+      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
-    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-    shadowSize: [41, 41]
+    shadowUrl:
+      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+    shadowSize: [41, 41],
   });
 
   const handleClick = (locationId: string): void => {
-    void router.push(`/map/${locationId}`);
+    void router.push(`map/${locationId}`);
   };
 
   return (
@@ -48,9 +50,9 @@ const Map = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        
+
         {positions.map((location) => (
-          <Marker 
+          <Marker
             key={location.id}
             position={location.position}
             icon={defaultIcon}
@@ -61,9 +63,9 @@ const Map = () => {
                 <br />
                 {location.description}
                 <br />
-                <button 
+                <button
                   onClick={() => handleClick(location.id)}
-                  className="mt-2 text-blue-600 underline cursor-pointer"
+                  className="mt-2 cursor-pointer text-blue-600 underline"
                 >
                   View Details →
                 </button>
