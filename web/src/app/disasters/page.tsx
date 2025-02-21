@@ -47,7 +47,7 @@ export default async function Home() {
               {/* )} */}
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pb-2">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum
             repellat ut architecto cumque ea et doloremque iure accusantium.
             Esse nostrum ullam at ad veniam expedita nesciunt ea ipsa aut
