@@ -59,7 +59,7 @@ const EmergencyCard = ({ article }: any) => (
     <CardFooter className="border-t pt-6">
       <div className="flex w-full justify-end">
         <a href={article.link} target="_blank" rel="noopener noreferrer">
-          <Button className='bg-[#56b76c] text-white' size="sm">
+          <Button className='bg-[#56b76c] text-white hover:text-black' size="sm">
             Read More <ExternalLink className="ml-2 h-4 w-4" />
           </Button>
         </a>
