@@ -19,22 +19,63 @@ enum DisasterStatus {
     ONGOING
 }
 
+enum FocusArea {
+    MEDICAL
+    FOOD
+    SHELTER
+    EDUCATION
+    INFRASTRUCTURE
+    OTHER
+}
+
 model User {
-    id            String     @id @default(cuid())
+    id            String    @id @default(cuid())
     name          String?
-    email         String?    @unique
+    email         String?   @unique
     emailVerified DateTime?
     image         String?
     userType      UserType
-    did           String     @unique
+    did           String    @unique
     walletId      String
-    disasters     Disaster[] // Relation for NGOs involved in disasters
 
     accounts Account[]
     sessions Session[]
     posts    Post[]
 
-    Disaster Disaster[] @relation(name: "DisasterNGOs")
+    // Relation to NGOs (Only if userType is NGO)
+    ngo NGO?
+}
+
+model NGO {
+    id           String   @id @default(cuid())
+    name         String
+    email        String?  @unique
+    phone        String?
+    locationLat  Float
+    locationLong Float
+    mission      String
+    vision       String
+    description  String
+    website      String?
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
+
+    // Relation to User
+    userId String @unique
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    // Many-to-many relation with disasters
+    disasters Disaster[] @relation(name: "NGODisasters")
+
+    // Many-to-many relation with focus areas
+    focusAreas NGOFocusArea[]
+}
+
+model NGOFocusArea {
+    id        String    @id @default(cuid())
+    ngo       NGO       @relation(fields: [ngoId], references: [id], onDelete: Cascade)
+    ngoId     String
+    focusArea FocusArea
 }
 
 model Disaster {
@@ -49,8 +90,7 @@ model Disaster {
     updatedAt    DateTime       @updatedAt
 
     // Many-to-many relation with NGOs
-    ngos User[] @relation(name: "DisasterNGOs")
-    User User[]
+    ngos NGO[] @relation(name: "NGODisasters")
 
     @@index([name])
 }

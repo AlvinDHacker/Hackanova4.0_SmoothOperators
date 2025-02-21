@@ -29,6 +29,14 @@ const DonorLogin = () => {
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="name">Full Name</Label>
+              <Input id="name" placeholder="Full Name here" />
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="name">Phone No.</Label>
+              <Input id="name" placeholder="+91" />
+            </div>
+            <div className="flex flex-col space-y-1.5">
               <Label htmlFor="name">Aadhar Card No.</Label>
               <Input id="name" />
             </div>
@@ -37,7 +45,7 @@ const DonorLogin = () => {
             </Button>
           </div>
           <DialogFooter>
-            <Button type="submit">Save changes</Button>
+            <Button type="submit">Login</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

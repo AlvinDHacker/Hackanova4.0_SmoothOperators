@@ -3,6 +3,7 @@ import React from "react";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Button } from "~/components/ui/button";
+import { Textarea } from "~/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -28,6 +29,30 @@ const NgoLogin = () => {
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="name">Full Name</Label>
+              <Input id="name" placeholder="Full Name here" />
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="name">Phone No.</Label>
+              <Input id="name" placeholder="+91" />
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="name">Mission</Label>
+              <Input id="name" placeholder="Full Name here" />
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="name">Vision</Label>
+              <Input id="name" placeholder="+91" />
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="name">Website</Label>
+              <Input id="name" placeholder="Full Name here" />
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="name">Description</Label>
+              <Textarea placeholder="Type your message here." rows={3} />
+            </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="name">Ngo Id</Label>
               <Input id="name" />
