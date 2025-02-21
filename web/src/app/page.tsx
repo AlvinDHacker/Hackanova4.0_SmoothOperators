@@ -5,6 +5,7 @@ import { IconCloud } from "~/components/ui/icon-cloud";
 import { AnimatedListDemo } from "~/components/ui/AnimatedListDemo";
 import HeroTerminal from "~/components/HeroTerminal";
 import DonorLogin from "~/components/Login/DonorLogin";
+import MainLogin from "~/components/Login/MainLogin";
 
 const slugs = [
   "paypal",
@@ -67,28 +68,36 @@ export default async function Home() {
 
             <div className="mx-auto w-full sm:w-[80%]">
               <Badge className={`font-poppins mb-4 ml-2 text-sm font-normal`}>
-                <span>Take Control of your Finances</span>
+                <span>Transparent. Swift. Corruption-Free</span>
               </Badge>
               <div className="flex flex-row items-center justify-between">
                 <div className="font-poppins flex-1 text-5xl font-semibold text-black dark:text-white sm:text-7xl">
-                  The Next <br className="hidden sm:block" />{" "}
                   <LineShadowText
-                    className="text-green-800"
+                    className="text-green-800 dark:text-green-500"
                     shadowColor={"black"}
                   >
-                    Generation
+                    Instant
                   </LineShadowText>{" "}
-                  <br />
-                  Finance Chatbot
+                  Aid, <br className="hidden sm:block" />{" "}
+                  <LineShadowText
+                    className="text-green-800 dark:text-green-500"
+                    shadowColor={"black"}
+                  >
+                    Zero
+                  </LineShadowText>{" "}
+                  Delays
                 </div>
               </div>
               <p className={`font-poppins my-5`}>
-                Finnovate AI simplifies financial management by providing
-                intelligent insights, interactive analysis, and real-time
-                querying of financial documents and data.
+                When disaster strikes, every second counts. Our
+                blockchain-powered emergency relief system ensures instant,
+                tamper-proof fund disbursement directly to those in need. With
+                real-time tracking, fraud prevention, and decentralized identity
+                (DID) verification, we bring speed, security, and transparency
+                to aid distribution in rural India.
               </p>
 
-              <DonorLogin />
+              <MainLogin />
             </div>
           </div>
 
@@ -96,9 +105,9 @@ export default async function Home() {
             className={`relative my-10 flex flex-1 items-center justify-center md:my-0`}
           >
             <img
-              src={"robot.png"}
-              alt="billing"
-              className="relative z-[5] h-[100%] w-[100%]"
+              src={"earth.png"}
+              alt="hero img"
+              className="relative z-[5] h-[100%] w-[90%]"
             />
 
             {/* gradient start */}
@@ -115,16 +124,20 @@ export default async function Home() {
             </h2>
             <div className="mt-6 w-full md:mt-0">
               <p className="font-poppins text-dimWhite text-md mb-3 text-left font-normal">
-                Finnovate AI is a domain-specific, AI-powered financial
-                management platform designed to revolutionize how organizations
-                manage their finances.
+                We revolutionize disaster relief using blockchain, AI, and
+                decentralized identity (DID) solutions to ensure that funds
+                reach the right hands without middlemen, delays, or corruption.
               </p>
               <p className="font-poppins text-dimWhite text-md text-left font-normal">
-                We are basically a chatbot on steriods which helps you for all
-                things finance.. Our unique features help you get a response in
-                graphs and charts which help you visualize better... Not only
-                that as a chatbot we even analyse youtube videos and answer your
-                questions based on it...
+                ✅ Real-Time Disaster Detection: AI-driven monitoring to
+                identify and verify disasters as they happen. ✅ Smart Contracts
+                for Instant Aid: Automated fund disbursement with zero
+                bureaucratic delays. ✅ Immutable Tracking: Every rupee spent is
+                recorded on the blockchain for 100% transparency. ✅ Fraud-Proof
+                Transactions: Vendors and NGOs are verified with decentralized
+                identity (DID) to prevent fund misuse. ✅ Geolocation-Based Aid
+                Coordination: Pinpointing disaster zones and matching them with
+                verified local responders.
               </p>
             </div>
           </div>
@@ -171,31 +184,31 @@ export default async function Home() {
             <div className="mb-6 flex flex-col items-center justify-between text-black dark:text-white sm:mb-16">
               <div className="my-auto">
                 <h2 className="font-poppins mb-3 w-full text-3xl font-semibold">
-                  What do we answer ?
+                  How it Works ?
                 </h2>
                 <div className="mt-6 w-full md:mt-0">
-                  <p className="font-poppins text-dimWhite text-md mb-6 text-left font-normal">
-                    Finnovate AI answers complex financial questions by
-                    analyzing documents, generating insights, and providing
-                    clear explanations in real-time. Whether it&apos;s
-                    understanding financial reports, identifying cost-saving
-                    opportunities, or visualizing spending patterns, Finnovate
-                    delivers accurate, context-aware answers, making financial
-                    decision-making easier and more efficient.
-                  </p>
+                  <ul className="font-poppins text-dimWhite text-md mb-6 text-left font-normal">
+                    <li>
+                      1️⃣ AI scrapes real-time disaster news & verifies it with
+                      on-ground sources.
+                    </li>
+                    <li>
+                      2️⃣ NGOs confirm the crisis & estimate aid requirements.
+                    </li>
+                    <li>
+                      3️⃣ Funds are auto-released via smart contracts to verified
+                      NGOs & vendors.
+                    </li>
+                    <li>
+                      4️⃣ Vendors supply aid & submit proofs (bills, GPS-stamped
+                      images, videos).
+                    </li>
+                    <li>
+                      5️⃣ All transactions are logged on blockchain for full
+                      transparency & accountability.
+                    </li>
+                  </ul>
                 </div>
-                {/* <Authenticated>
-                <Link href={"/dashboard/websearch"}>
-                  <Button className="gap-3">
-                    Answer a Question <ExternalLink />
-                  </Button>
-                </Link>
-              </Authenticated>
-              <Unauthenticated>
-                <Button>
-                  <SignInButton />
-                </Button>
-              </Unauthenticated> */}
               </div>
             </div>
             <div className="block sm:hidden">
