@@ -2,6 +2,9 @@ import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 
 import { LatestPost } from "~/app/_components/post";
+import DisasterVerify from "~/components/DisasterVerify";
+import DonorLogin from "~/components/Login/DonorLogin";
+import NgoLogin from "~/components/Login/NgoLogin";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
@@ -16,17 +19,12 @@ import { auth } from "~/server/auth";
 import { api, HydrateClient } from "~/trpc/server";
 
 export default async function Home() {
-  const hello = await api.post.hello({ text: "from tRPC" });
-  const session = await auth();
-
-  if (session?.user) {
-    void api.post.getLatest.prefetch();
-  }
-
   return (
     <div className="mx-3">
-      <div className="mb-3 flex flex-col items-center justify-between gap-3 sm:flex-row">
-        <h1 className="text-xl font-bold sm:text-2xl">Emergencies</h1>
+      <div className="mb-3 flex flex-row items-center justify-between gap-3">
+        <h1 className="text-start text-xl font-bold sm:text-2xl">
+          Emergencies
+        </h1>
         {/* <CreateNoteButton /> */}
         <Button>Hi</Button>
       </div>
@@ -63,41 +61,10 @@ export default async function Home() {
             </div>
           </CardFooter>
         </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Disaster Name</CardTitle>
-            <CardDescription>Disaster Name</CardDescription>
-          </CardHeader>
-          <CardContent>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum
-            repellat ut architecto cumque ea et doloremque iure accusantium.
-            Esse nostrum ullam at ad veniam expedita nesciunt ea ipsa aut
-            consectetur!
-          </CardContent>
-          <CardFooter>
-            <div className="flex justify-end">
-              <Button>View</Button>
-            </div>
-          </CardFooter>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Disaster Name</CardTitle>
-            <CardDescription>Disaster Name</CardDescription>
-          </CardHeader>
-          <CardContent>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum
-            repellat ut architecto cumque ea et doloremque iure accusantium.
-            Esse nostrum ullam at ad veniam expedita nesciunt ea ipsa aut
-            consectetur!
-          </CardContent>
-          <CardFooter>
-            <div className="flex justify-end">
-              <Button>View</Button>
-            </div>
-          </CardFooter>
-        </Card>
       </div>
+      <DisasterVerify />
+      <DonorLogin />
+      <NgoLogin />
     </div>
   );
 }
