@@ -13,19 +13,16 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
+export default function DashboardLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
-      <body>
-        <TRPCReactProvider>
-          <div className="pb-16">
-            <Navbar />
-            {children}
-          </div>
-        </TRPCReactProvider>
-      </body>
-    </html>
+    <div>
+      <div className="container mx-auto block sm:flex sm:gap-24">
+        <SideNav />
+
+        {children}
+      </div>
+    </div>
   );
 }

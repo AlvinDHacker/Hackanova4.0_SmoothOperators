@@ -1,6 +1,4 @@
 "use client";
-
-import { DockIcon, Docks } from "../components/ui/dock";
 import { cn } from "../lib/utils";
 import { BarChart2, ClipboardPen, Files, Search, Globe } from "lucide-react";
 import Link from "next/link";
@@ -83,60 +81,6 @@ export default function SideNav() {
           </Link>
         </li>
       </ul>
-      <div className="fixed bottom-0 w-full">
-        <div className="mx-auto flex w-[80%] justify-center sm:hidden">
-          <Docks
-            className="shadow-second z-10 rounded-t-xl bg-white shadow-md dark:bg-black"
-            direction="middle"
-          >
-            <DockIcon>
-              <Link href={"/dashboard/search"}>
-                <Search
-                  className={cn("text-second size-6", {
-                    "text-green-600": pathname.endsWith("/search"),
-                  })}
-                />
-              </Link>
-            </DockIcon>
-            <DockIcon>
-              <Link href={"/dashboard/documents"}>
-                <Files
-                  className={cn("text-second size-6", {
-                    "text-green-600": pathname.endsWith("/documents"),
-                  })}
-                />
-              </Link>
-            </DockIcon>
-            <DockIcon>
-              <Link href={"/dashboard/finnosearch"}>
-                <Globe
-                  className={cn("text-second size-6", {
-                    "text-green-600": pathname.endsWith("/finnosearch"),
-                  })}
-                />
-              </Link>
-            </DockIcon>
-            <DockIcon>
-              <Link href={"/dashboard/notes"}>
-                <ClipboardPen
-                  className={cn("text-second size-6", {
-                    "text-green-600": pathname.endsWith("/notes"),
-                  })}
-                />
-              </Link>
-            </DockIcon>
-            <DockIcon>
-              <Link href={"/dashboard/analytics"}>
-                <BarChart2
-                  className={cn("text-second size-6", {
-                    "text-green-600": pathname.endsWith("/analytics"),
-                  })}
-                />
-              </Link>
-            </DockIcon>
-          </Docks>
-        </div>
-      </div>
       {/* <div className="fixed w-full bottom-0">
         <div className="flex w-[70%] mx-auto bg-green-500 p-3 justify-between sm:hidden">
           <div>
