@@ -10,6 +10,7 @@ import Navbar from "~/components/Navbar";
 import Web3Provider from "~/components/Web3Provider";
 import Providers from "~/components/Providers";
 import { UserProvider } from "~/components/AuthComponent";
+import Chatbot from "~/components/Chatbot";
 
 // export const metadata: Metadata = {
 //   title: "Create T3 App",
@@ -28,6 +29,7 @@ export default function RootLayout({
             <TRPCReactProvider>
               <Web3Provider>
                 <Navbar />
+                <Chatbot />
                 {children}
               </Web3Provider>
             </TRPCReactProvider>

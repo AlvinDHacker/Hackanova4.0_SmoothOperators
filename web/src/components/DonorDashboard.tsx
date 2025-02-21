@@ -106,7 +106,7 @@ const DonorDashboard = ({ user }: any) => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">NGOs Supported</CardTitle>
-            <Building2 className="h-4 w-4 text-green-500" />
+            <Building2 className="h-4 w-4 dark:text-green-700 text-green-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">24</div>
