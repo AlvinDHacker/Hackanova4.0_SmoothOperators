@@ -1,17 +1,58 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
     provider = "prisma-client-js"
 }
 
 datasource db {
     provider = "mysql"
-    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
     url      = env("DATABASE_URL")
+}
+
+enum UserType {
+    DONOR
+    NGO
+    VENDOR
+}
+
+enum DisasterStatus {
+    ACTIVE
+    RESOLVED
+    ONGOING
+}
+
+model User {
+    id            String     @id @default(cuid())
+    name          String?
+    email         String?    @unique
+    emailVerified DateTime?
+    image         String?
+    userType      UserType
+    did           String     @unique
+    walletId      String
+    disasters     Disaster[] // Relation for NGOs involved in disasters
+
+    accounts Account[]
+    sessions Session[]
+    posts    Post[]
+
+    Disaster Disaster[] @relation(name: "DisasterNGOs")
+}
+
+model Disaster {
+    id           String         @id @default(cuid())
+    name         String
+    description  String
+    locationLat  Float
+    locationLong Float
+    status       DisasterStatus @default(ACTIVE)
+    amountUsed   Float          @default(0.0)
+    createdAt    DateTime       @default(now())
+    updatedAt    DateTime       @updatedAt
+
+    // Many-to-many relation with NGOs
+    ngos User[] @relation(name: "DisasterNGOs")
+    User User[]
+
+    @@index([name])
 }
 
 model Post {
@@ -26,7 +67,7 @@ model Post {
     @@index([name])
 }
 
-// Necessary for Next auth
+// Necessary for NextAuth
 model Account {
     id                       String  @id @default(cuid())
     userId                   String
@@ -52,17 +93,6 @@ model Session {
     userId       String
     expires      DateTime
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    posts         Post[]
 }
 
 model VerificationToken {
