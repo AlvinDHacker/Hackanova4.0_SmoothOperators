@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 // import { OrganizationSwitcher } from "@clerk/nextjs";
 // import { Authenticated } from "convex/react";
-import { Loader2 } from "lucide-react";
+import { Loader2, ShieldCheck } from "lucide-react";
 
 const Navbar = () => {
   return (
@@ -17,13 +17,14 @@ const Navbar = () => {
             href="/"
             className="flex items-center gap-3 text-xl font-bold sm:text-2xl"
           >
-            <Image
+            {/* <Image
               src="/favicon.ico"
               width={40}
               height={40}
               className="rounded"
               alt="logo"
-            />
+            /> */}
+            <ShieldCheck className="text-green-600" />
             Relief ResQ
           </Link>
 
