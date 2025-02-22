@@ -1,143 +1,98 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.28;
 
 contract ResQ {
     struct Beneficiary {
-        string did; // Decentralized Identity (DID)
+        string did;
         string uid;
-        address wallet; // Wallet Address
-        uint256 fundsReceived; // Track disbursed funds
+        uint256 fundsReceived;
     }
 
     struct Donor {
-        string did; // Decentralized Identity (DID)
-        string aadhaar; // Aadhaar Number (hashed)
-        address wallet; // Wallet Address
+        string did;
+        string aadhaar;
         uint256 balance;
     }
 
     mapping(address => Beneficiary) public beneficiaries;
     mapping(address => Donor) public donors;
 
+    event BeneficiaryRegistered(
+        address indexed beneficiary,
+        string did,
+        string uid
+    );
+    event DonorRegistered(address indexed donor, string did, string aadhaar);
     event FundsDisbursed(address indexed beneficiary, uint256 amount);
-    event DonorDeposit(address indexed donor, uint256 amount);
-    event BeneficiaryRegistered(address indexed wallet, string did);
-
-    address public admin;
-
-    modifier notRegisteredB() {
-        require(
-            bytes(beneficiaries[msg.sender].did).length == 0,
-            "Already registered"
-        );
-        _;
-    }
-
-    modifier notRegisteredD() {
-        require(
-            bytes(beneficiaries[msg.sender].did).length == 0,
-            "Already registered"
-        );
-        _;
-    }
-
-    constructor() {
-        admin = msg.sender; // Only admin can register beneficiaries
-    }
+    event DonationReceived(address indexed donor, uint256 amount); // New event
 
     modifier onlyAdmin() {
-        require(msg.sender == admin, "Only admin can perform this action");
+        require(
+            msg.sender == address(this),
+            "Only admin can call this function"
+        );
         _;
     }
 
     function registerBeneficiary(
-        address _wallet,
+        address _beneficiary,
         string memory _did,
         string memory _uid
-    ) public notRegisteredB {
+    ) public {
         require(
-            beneficiaries[_wallet].wallet == address(0),
-            "Beneficiary already exists"
+            bytes(beneficiaries[_beneficiary].did).length == 0,
+            "Already registered as Beneficiary"
         );
-
-        beneficiaries[_wallet] = Beneficiary({
-            did: _did,
-            uid: _uid,
-            wallet: _wallet,
-            fundsReceived: 0
-        });
-
-        emit BeneficiaryRegistered(_wallet, _did);
+        beneficiaries[_beneficiary] = Beneficiary(_did, _uid, 0);
+        emit BeneficiaryRegistered(_beneficiary, _did, _uid);
     }
 
     function registerDonor(
-        address _wallet,
+        address _donor,
         string memory _did,
         string memory _aadhaar
-    ) public notRegisteredD {
+    ) public {
+        require(bytes(donors[_donor].did).length == 0, "Donor already exists");
+        // Initialize balance to 0 when registering
+        donors[_donor] = Donor(_did, _aadhaar, 0);
+        emit DonorRegistered(_donor, _did, _aadhaar);
+    }
+
+    function disburseFunds(address _beneficiary, uint256 _amount) public {
         require(
-            beneficiaries[_wallet].wallet == address(0),
-            "Donor already exists"
+            bytes(beneficiaries[_beneficiary].did).length != 0,
+            "Beneficiary not registered"
         );
-
-        donors[_wallet] = Donor({
-            did: _did,
-            aadhaar: _aadhaar,
-            wallet: _wallet,
-            balance: 0
-        });
-
-        emit BeneficiaryRegistered(_wallet, _did);
-    }
-
-    function depositFunds() public payable {
-        require(msg.value > 0, "Deposit amount must be greater than zero");
-        donors[msg.sender].balance += msg.value;
-        emit DonorDeposit(msg.sender, msg.value);
-    }
-
-    function disburseFunds(address _wallet, uint256 _amount) public onlyAdmin {
-        require(_amount > 0, "Amount must be greater than zero");
         require(
             address(this).balance >= _amount,
             "Insufficient funds in contract"
         );
-        require(
-            beneficiaries[_wallet].wallet != address(0),
-            "Beneficiary not registered"
-        );
 
-        payable(_wallet).transfer(_amount);
-        beneficiaries[_wallet].fundsReceived += _amount;
-
-        emit FundsDisbursed(_wallet, _amount);
+        beneficiaries[_beneficiary].fundsReceived += _amount;
+        payable(_beneficiary).transfer(_amount);
+        emit FundsDisbursed(_beneficiary, _amount);
     }
 
     function getBeneficiaryDetails(
-        address _wallet
-    ) public view returns (string memory, string memory, uint256) {
-        require(
-            beneficiaries[_wallet].wallet != address(0),
-            "Beneficiary not found"
-        );
-        return (
-            beneficiaries[_wallet].did,
-            beneficiaries[_wallet].uid,
-            beneficiaries[_wallet].fundsReceived
-        );
+        address _beneficiary
+    ) public view returns (Beneficiary memory) {
+        return beneficiaries[_beneficiary];
     }
 
     function getDonorDetails(
-        address _wallet
-    ) public view returns (string memory, string memory, uint256) {
-        require(donors[_wallet].wallet != address(0), "Beneficiary not found");
-        return (
-            donors[_wallet].did,
-            donors[_wallet].aadhaar,
-            donors[_wallet].balance
-        );
+        address _donor
+    ) public view returns (Donor memory) {
+        return donors[_donor];
     }
 
-    function getContractBalance() public view returns (uint256) {
-        return address(this).balance;
+    // Modified receive function
+    receive() external payable {
+        require(msg.value > 0, "Deposit amount must be greater than zero");
+        require(
+            bytes(donors[msg.sender].did).length != 0,
+            "Donor not registered"
+        );
+        donors[msg.sender].balance += msg.value;
+        emit DonationReceived(msg.sender, msg.value);
     }
 }
