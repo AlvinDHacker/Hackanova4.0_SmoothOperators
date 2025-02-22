@@ -21,6 +21,13 @@ const DemoButtons = () => {
             description: "a detailed explanation on how to use Relief ResQ",
           },
         },
+        {
+          element: "#login",
+          popover: {
+            title: "Begin your journey with us",
+            description: "Login as per usertype to Relief ResQ",
+          },
+        },
       ],
     });
 
@@ -30,7 +37,9 @@ const DemoButtons = () => {
 
   return (
     <div className="flex items-center gap-4">
-      <MainLogin />
+      <div id="login">
+        <MainLogin />
+      </div>
       <Button id="showdemo" variant="outline">
         Show Demo
       </Button>
