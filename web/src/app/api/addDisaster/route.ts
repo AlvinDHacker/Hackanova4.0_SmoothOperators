@@ -22,6 +22,11 @@ export async function POST(req: NextRequest) {
           locationLat: parseFloat(lat),
           locationLong: parseFloat(long),
           description: `${disasterName} brought to notice by ${name}`,
+          title: `${disasterName} - ${name}`,
+          source: "twilio",
+          link: `twilio - ${name}`,
+          published: new Date(),
+          emergencyType: "No internet",
         },
       });
 
