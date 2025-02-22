@@ -20,10 +20,9 @@ enum DisasterStatus {
 }
 
 enum FocusArea {
-    MEDICAL
     FOOD
-    SHELTER
-    EDUCATION
+    MEDICAL
+    TRAVEL
     INFRASTRUCTURE
     OTHER
 }
@@ -34,22 +33,22 @@ model User {
     email    String?  @unique
     image    String?
     userType UserType
+    phoneNo  String
     did      String?  @unique // DID is now optional
     walletId String   @unique // Wallet address is now unique and required for SIWE
+    aadhar   String?
 
     accounts Account[]
     sessions Session[]
     posts    Post[]
 
-    // Relation to NGOs (Only if userType is NGO)
-    ngo NGO?
+    NGO NGO[]
 }
 
 model NGO {
     id           String   @id @default(cuid())
     name         String
     email        String?  @unique
-    phone        String?
     locationLat  Float
     locationLong Float
     mission      String
