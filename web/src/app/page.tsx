@@ -6,6 +6,7 @@ import { AnimatedListDemo } from "~/components/ui/AnimatedListDemo";
 import HeroTerminal from "~/components/HeroTerminal";
 import DonorLogin from "~/components/Login/DonorLogin";
 import MainLogin from "~/components/Login/MainLogin";
+import { EvervaultCard, Icon } from "~/components/ui/evervault-card";
 
 const slugs = [
   "paypal",
@@ -126,18 +127,18 @@ export default async function Home() {
               <p className="font-poppins text-dimWhite text-md mb-3 text-left font-normal">
                 We revolutionize disaster relief using blockchain, AI, and
                 decentralized identity (DID) solutions to ensure that funds
-                reach the right hands without middlemen, delays, or corruption.
+                reach the right hands faster
               </p>
               <p className="font-poppins text-dimWhite text-md text-left font-normal">
-                ✅ Real-Time Disaster Detection: AI-driven monitoring to
-                identify and verify disasters as they happen. ✅ Smart Contracts
-                for Instant Aid: Automated fund disbursement with zero
-                bureaucratic delays. ✅ Immutable Tracking: Every rupee spent is
-                recorded on the blockchain for 100% transparency. ✅ Fraud-Proof
-                Transactions: Vendors and NGOs are verified with decentralized
-                identity (DID) to prevent fund misuse. ✅ Geolocation-Based Aid
-                Coordination: Pinpointing disaster zones and matching them with
-                verified local responders.
+                Real-Time Disaster Detection: AI-driven monitoring to identify
+                and verify disasters as they happen. Smart Contracts for Instant
+                Aid: Automated fund disbursement with zero bureaucratic delays.
+                Immutable Tracking: Every rupee spent is recorded on the
+                blockchain for 100% transparency. Fraud-Proof Transactions:
+                Vendors and NGOs are verified with decentralized identity (DID)
+                to prevent fund misuse. Geolocation-Based Aid Coordination:
+                Pinpointing disaster zones and matching them with verified local
+                responders.
               </p>
             </div>
           </div>
@@ -150,31 +151,36 @@ export default async function Home() {
           <div className="grid-cols-2 gap-7 pb-5 md:grid">
             <div className="col-span-1">
               <h2 className="font-poppins mb-4 mt-10 w-full text-3xl font-semibold">
-                We&apos;ve trained for everything on Finance
+                We&apos;re trained for anything
               </h2>
               <div className="mt-6 w-full">
                 <p className="font-poppins text-dimWhite text-md mb-6 max-w-[450px] text-left font-normal">
-                  From saving and investing to budgeting and wealth management,
-                  we cover every aspect of finance to help you make informed
-                  decisions and secure your financial future.
+                  Join the Revolution in Disaster Relief <br /> Be a donor,
+                  volunteer, or partner in rebuilding lives with trust and
+                  efficiency. <br />
+                  Not just this we even have top notch security
                 </p>
               </div>
-              {/* <Authenticated>
-              <Link href={"/dashboard"}>
-                <ConfettiButton className="gap-3">
-                  Try it out <ExternalLink />
-                </ConfettiButton>
-              </Link>
-            </Authenticated>
-            <Unauthenticated>
-              <Button>
-                <SignInButton />
-              </Button>
-            </Unauthenticated> */}
             </div>
             <div className="relative flex size-full items-center justify-center overflow-hidden">
               <IconCloud images={images} />
             </div>
+            {/* <div className="relative mx-auto flex h-[30rem] max-w-sm flex-col items-start border border-black/[0.2] p-4 dark:border-white/[0.2]">
+              <Icon className="absolute -left-3 -top-3 h-6 w-6 text-black dark:text-white" />
+              <Icon className="absolute -bottom-3 -left-3 h-6 w-6 text-black dark:text-white" />
+              <Icon className="absolute -right-3 -top-3 h-6 w-6 text-black dark:text-white" />
+              <Icon className="absolute -bottom-3 -right-3 h-6 w-6 text-black dark:text-white" />
+
+              <EvervaultCard text="hover" />
+
+              <h2 className="mt-4 text-sm font-light text-black dark:text-white">
+                Hover over this card to reveal an awesome effect. Running out of
+                copy here.
+              </h2>
+              <p className="mt-4 rounded-full border border-black/[0.2] px-2 py-0.5 text-sm font-light text-black dark:border-white/[0.2] dark:text-white">
+                Watch me hover
+              </p>
+            </div> */}
           </div>
 
           <div className="mx-auto grid-cols-2 gap-7 pb-16 md:mb-16 md:grid">
@@ -187,7 +193,7 @@ export default async function Home() {
                   How it Works ?
                 </h2>
                 <div className="mt-6 w-full md:mt-0">
-                  <ul className="font-poppins text-dimWhite text-md mb-6 text-left font-normal">
+                  <ul className="font-poppins text-dimWhite text-md mb-6 space-y-2 text-left font-normal">
                     <li>
                       1️⃣ AI scrapes real-time disaster news & verifies it with
                       on-ground sources.
