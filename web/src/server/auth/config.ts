@@ -60,13 +60,58 @@ export const authConfig: NextAuthConfig = {
           console.log(user);
           // If user doesn't exist, create a new one
           if (!user) {
-            user = await db.user.create({
-              data: {
-                userType: UserType.DONOR,
-                walletId: siwe.address,
-                name: siwe.address, // Default name as wallet address
-              },
-            });
+            if (credentials.userType == "DONOR") {
+              user = await db.user.create({
+                data: {
+                  userType: UserType.DONOR,
+                  walletId: siwe.address,
+                  name: credentials.name,
+                  phoneNo: credentials.phoneNo,
+                  aadhar: credentials.aadhar,
+                  did: `did:ethr:${siwe.address}`,
+                },
+              });
+            }
+
+            if (credentials.userType == "NGO") {
+              user = await db.user.create({
+                data: {
+                  userType: UserType.NGO,
+                  walletId: siwe.address,
+                  name: credentials.name,
+                  phoneNo: credentials.phoneNo,
+                  did: `did:ethr:${siwe.address}`,
+                },
+              });
+
+              let ngo = await db.nGO.create({
+                data: {
+                  name: credentials.name,
+                  mission: credentials.mission as string,
+                  vision: credentials.vision as string,
+                  locationLat: parseFloat(credentials.lat),
+                  locationLong: parseFloat(credentials.lon),
+                  website: credentials.website as string,
+                  description: credentials.desc as string,
+                  userId: user.id,
+                },
+              });
+
+              const focusArea = JSON.parse(credentials.focusArea || "[]");
+
+              let fa = ["FOOD", "MEDICAL", "TRAVEL", "INFRASTRUCTURE", "OTHER"];
+
+              await Promise.all(
+                focusArea.map(async (v) => {
+                  await db.nGOFocusArea.create({
+                    data: {
+                      ngoId: ngo.id,
+                      focusArea: fa[v as number],
+                    },
+                  });
+                }),
+              );
+            }
           }
 
           return {

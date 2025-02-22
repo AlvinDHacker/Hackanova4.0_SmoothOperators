@@ -22,10 +22,98 @@ import {
 } from "~/components/ui/input-otp";
 import { Separator } from "../ui/separator";
 import { AnimatePresence, motion } from "motion/react";
+import { signIn } from "next-auth/react";
+import { SiweMessage, generateNonce } from "siwe";
+import { BrowserProvider, Contract } from "ethers";
+import contractAbi from "../../../contract/ResQ.json";
+import { checkUser } from "~/app/api/manageUser";
 
 const DonorLogin = () => {
   const [next, setNext] = useState(false);
   const img = `https://cdn.simpleicons.org/ethereum/ethereum`;
+  const [data, setData] = useState({
+    name: "",
+    phoneNo: "",
+    aadhar: "",
+    userType: "DONOR",
+  });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [signature, setSignature] = useState("");
+  const [signer, setSigner] = useState();
+
+  const handleSignUp = async () => {
+    try {
+      await signIn("credentials", {
+        message: JSON.stringify(message),
+        signature,
+        redirect: false,
+        ...data,
+      });
+
+      const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
+
+      if (!contractAddress) {
+        throw new Error("Contract address is missing in .env");
+      }
+
+      const contractInstance = new Contract(
+        contractAddress,
+        contractAbi.abi,
+        signer,
+      );
+
+      contractInstance.registerDonor(
+        signer.address,
+        `did:ethr:${signer.address}`,
+        data.aadhar,
+      );
+    } catch (err) {
+      console.error("Login failed:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogin = async () => {
+    if (!window.ethereum) return alert("MetaMask required");
+
+    setLoading(true);
+    try {
+      const provider = new BrowserProvider(window.ethereum);
+      const tsigner = await provider.getSigner();
+      const address = await tsigner.getAddress();
+
+      const userExists = await checkUser(signer.address);
+      const message = new SiweMessage({
+        domain: window.location.host,
+        address,
+        statement: "Sign in with Ethereum",
+        uri: window.location.origin,
+        version: "1",
+        chainId: 1,
+        nonce: generateNonce(),
+      });
+
+      const signature = await tsigner.signMessage(message.prepareMessage());
+
+      if (userExists) {
+        await signIn("credentials", {
+          message: JSON.stringify(message),
+          signature,
+          redirect: false,
+          ...data,
+        });
+      } else {
+        setMessage(JSON.stringify(message));
+        setSignature(signature);
+        setSigner(tsigner);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <div>
       <Dialog>
@@ -51,19 +139,67 @@ const DonorLogin = () => {
                 <div className="grid gap-4 py-4">
                   <div className="flex flex-col space-y-1.5">
                     <Label htmlFor="name">Full Name</Label>
-                    <Input id="name" placeholder="Full Name here" />
+                    <Input
+                      onChange={(e) => {
+                        setData((prev) => ({
+                          ...prev,
+                          name: e.target.value,
+                        }));
+                      }}
+                      id="name"
+                      placeholder="Full Name here"
+                    />
                   </div>
                   <div className="flex flex-col space-y-1.5">
                     <Label htmlFor="name">Phone No.</Label>
-                    <Input id="name" placeholder="+91" />
+                    <Input
+                      onChange={(e) => {
+                        setData((prev) => ({
+                          ...prev,
+                          phoneNo: e.target.value,
+                        }));
+                      }}
+                      id="name"
+                      placeholder="+91"
+                    />
                   </div>
                   <div className="flex flex-col space-y-1.5">
                     <Label htmlFor="name">Aadhar Card No.</Label>
-                    <Input id="name" />
+                    <Input
+                      onChange={(e) => {
+                        setData((prev) => ({
+                          ...prev,
+                          aadhar: e.target.value,
+                        }));
+                      }}
+                      id="name"
+                    />
                   </div>
                 </div>
                 <Separator />
                 <DialogFooter>
+                  <div className="mt-2 flex justify-between gap-3">
+                    {/* <Button onClick={() => setNext(false)} variant="outline">
+                      <ChevronLeft />
+                      Back
+                    </Button> */}
+                    <Button
+                      onClick={handleLogin}
+                      disabled={
+                        data.name == "" ||
+                        data.phoneNo == "" ||
+                        data.aadhar == ""
+                      }
+                      className="border border-gray-600 disabled:bg-gray-400"
+                      variant={"outline"}
+                      type="submit"
+                    >
+                      <img src={img} height={15} width={15} alt="Hi" />
+                      Login with Ethereum
+                    </Button>
+                  </div>
+                </DialogFooter>
+                {/* <DialogFooter>
                   <div className="mt-2 flex justify-between gap-3">
                     <DialogClose asChild>
                       <Button variant="outline">
@@ -75,7 +211,7 @@ const DonorLogin = () => {
                       Next
                     </Button>
                   </div>
-                </DialogFooter>
+                </DialogFooter> */}
               </motion.div>
             ) : (
               <motion.div
