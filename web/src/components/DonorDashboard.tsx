@@ -1,15 +1,18 @@
 "use client";
-import React from 'react';
+import React from "react";
 import { useRouter } from "next/navigation";
-import { 
-  Activity, 
-  AlertCircle, 
-  ArrowUpRight, 
-  Building2, 
-  Globe, 
-  Heart, 
+import {
+  Activity,
+  AlertCircle,
+  ArrowUpRight,
+  Building2,
+  Globe,
+  Heart,
   LineChart,
-  Users 
+  Map,
+  Phone,
+  User2,
+  Users,
 } from "lucide-react";
 import {
   Card,
@@ -18,12 +21,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "~/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import {
   AreaChart,
   Area,
@@ -34,7 +32,7 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis
+  YAxis,
 } from "recharts";
 
 const DonorDashboard = ({ user }: any) => {
@@ -65,11 +63,40 @@ const DonorDashboard = ({ user }: any) => {
   ];
 
   return (
-    <div className="flex min-h-screen flex-col gap-4 p-8">
+    <div className="flex min-h-screen w-full flex-col gap-4 p-8">
+      <Card className="">
+        <CardContent className="p-6">
+          <div className="flex justify-between gap-3">
+            <div className="flex items-center gap-6">
+              <div className="h-20 w-20 rounded-full bg-white/20 p-4">
+                <User2 className="h-12 w-12" />
+              </div>
+              <div className="flex-1">
+                <h1 className="text-3xl font-bold">
+                  {user?.name || "NGO Name"}
+                </h1>
+                <p className="">{user?.email || "xyz@gmail.com"}</p>
+                <div className="mt-2 flex gap-4">
+                  <span className="flex items-center gap-1">
+                    <Phone className="h-4 w-4" />
+                    {user?.phone || "website.org"}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Map className="h-4 w-4" />
+                    {`${user?.location}`}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Donations</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Donations
+            </CardTitle>
             <Heart className="h-4 w-4 text-rose-500" />
           </CardHeader>
           <CardContent>
@@ -81,19 +108,21 @@ const DonorDashboard = ({ user }: any) => {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Lives Impacted</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Lives Impacted
+            </CardTitle>
             <Users className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">2,350</div>
-            <p className="text-xs text-muted-foreground">
-              Across 15 disasters
-            </p>
+            <p className="text-xs text-muted-foreground">Across 15 disasters</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Active Disasters</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Active Disasters
+            </CardTitle>
             <AlertCircle className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
@@ -105,8 +134,10 @@ const DonorDashboard = ({ user }: any) => {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">NGOs Supported</CardTitle>
-            <Building2 className="h-4 w-4 dark:text-green-700 text-green-600" />
+            <CardTitle className="text-sm font-medium">
+              NGOs Supported
+            </CardTitle>
+            <Building2 className="h-4 w-4 text-green-600 dark:text-green-700" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">24</div>
@@ -116,7 +147,6 @@ const DonorDashboard = ({ user }: any) => {
           </CardContent>
         </Card>
       </div>
-\
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         <Card className="col-span-4">
           <CardHeader>
@@ -159,7 +189,6 @@ const DonorDashboard = ({ user }: any) => {
           </CardContent>
         </Card>
       </div>
-
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         <Card className="col-span-3">
           <CardHeader>
@@ -171,7 +200,9 @@ const DonorDashboard = ({ user }: any) => {
               <div className="h-12 w-12 rounded-full bg-gray-200" />
               <div>
                 <p className="text-sm font-medium">John Doe</p>
-                <p className="text-xs text-muted-foreground">john@example.com</p>
+                <p className="text-xs text-muted-foreground">
+                  john@example.com
+                </p>
               </div>
             </div>
             <div className="grid gap-2">
@@ -185,7 +216,9 @@ const DonorDashboard = ({ user }: any) => {
               </div>
               <div className="flex items-center justify-between">
                 <p className="text-sm">Focus Areas</p>
-                <p className="text-xs text-muted-foreground">Medical, Education</p>
+                <p className="text-xs text-muted-foreground">
+                  Medical, Education
+                </p>
               </div>
             </div>
           </CardContent>
@@ -211,8 +244,12 @@ const DonorDashboard = ({ user }: any) => {
                         <Activity className="h-4 w-4" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium">Donated to Medical Relief</p>
-                        <p className="text-xs text-muted-foreground">2 hours ago</p>
+                        <p className="text-sm font-medium">
+                          Donated to Medical Relief
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          2 hours ago
+                        </p>
                       </div>
                     </div>
                     <div className="text-sm font-medium">$500.00</div>

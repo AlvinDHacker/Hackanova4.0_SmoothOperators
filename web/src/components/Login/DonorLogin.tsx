@@ -12,26 +12,28 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSeparator,
-  InputOTPSlot,
-} from "~/components/ui/input-otp";
+// import {
+//   InputOTP,
+//   InputOTPGroup,
+//   InputOTPSeparator,
+//   InputOTPSlot,
+// } from "~/components/ui/input-otp";
 import { Separator } from "../ui/separator";
 import { AnimatePresence, motion } from "motion/react";
 import { signIn } from "next-auth/react";
 import { SiweMessage, generateNonce } from "siwe";
-import { BrowserProvider, Contract, JsonRpcSigner } from "ethers";
+import { BrowserProvider, Contract } from "ethers";
 import contractAbi from "../../../contract/ResQ.json";
 import { checkUser } from "~/app/api/manageUser";
+import type { ResQ } from "typechain-types/ResQ";
+import type { JsonRpcSigner } from "ethers";
 
-interface FormData {
+type FormData = {
   name: string;
   phoneNo: string;
   aadhar: string;
   userType: string;
-}
+};
 
 const DonorLogin = () => {
   const [next, setNext] = useState(false);
@@ -43,9 +45,9 @@ const DonorLogin = () => {
     userType: "DONOR",
   });
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState<SiweMessage>();
   const [signature, setSignature] = useState("");
-  const [signer, setSigner] = useState<JsonRpcSigner | undefined>();
+  const [signer, setSigner] = useState<JsonRpcSigner>();
   const [isOpen, setIsOpen] = useState(false);
 
   const openDialog = () => setIsOpen(true);
@@ -66,28 +68,19 @@ const DonorLogin = () => {
         throw new Error("Contract address is missing in .env");
       }
 
-      // Replace the contract interaction code in handleSignUp:
-      if (!signer) {
-        throw new Error("Signer not initialized");
-      }
-
-      const contractInstance = new Contract(
+      const contractInstance: ResQ = new Contract(
         contractAddress,
         contractAbi.abi,
         signer,
-      ) as Contract & {
-        registerDonor(
-          address: string,
-          did: string,
-          aadhar: string,
-        ): Promise<any>;
-      };
+      ) as unknown as ResQ;
 
-      await contractInstance?.registerDonor(
-        await signer.getAddress(),
-        `did:ethr:${await signer.getAddress()}`,
-        data.aadhar,
-      );
+      if (signer) {
+        contractInstance.registerDonor(
+          signer.address,
+          `did:ethr:${signer.address}`,
+          data.aadhar,
+        );
+      }
     } catch (err) {
       console.error("Login failed:", err);
     } finally {
@@ -128,7 +121,7 @@ const DonorLogin = () => {
           ...data,
         });
       } else {
-        setMessage(JSON.stringify(message));
+        setMessage(message);
         setSignature(signature);
         setSigner(tsigner);
         openDialog();
@@ -239,7 +232,7 @@ const DonorLogin = () => {
               >
                 <div className="grid gap-4 py-4">
                   <Label htmlFor="otp">Enter OTP</Label>
-                  <InputOTP maxLength={6}>
+                  {/* <InputOTP maxLength={6}>
                     <InputOTPGroup>
                       <InputOTPSlot index={0} />
                       <InputOTPSlot index={1} />
@@ -251,7 +244,7 @@ const DonorLogin = () => {
                       <InputOTPSlot index={4} />
                       <InputOTPSlot index={5} />
                     </InputOTPGroup>
-                  </InputOTP>
+                  </InputOTP> */}
                 </div>
                 <Separator />
                 <DialogFooter>

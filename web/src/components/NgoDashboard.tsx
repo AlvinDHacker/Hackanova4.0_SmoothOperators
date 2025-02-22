@@ -1,6 +1,6 @@
 "use client";
-import React from 'react';
-import { useState } from 'react';
+import React from "react";
+import { useState } from "react";
 import {
   Activity,
   ArrowUpRight,
@@ -14,7 +14,7 @@ import {
   Map,
   AlertCircle,
   ChevronRight,
-  Filter
+  Filter,
 } from "lucide-react";
 import {
   Card,
@@ -24,12 +24,7 @@ import {
   CardTitle,
   CardFooter,
 } from "~/components/ui/card";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "~/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import {
   AreaChart,
   Area,
@@ -43,7 +38,7 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis
+  YAxis,
 } from "recharts";
 import {
   Select,
@@ -52,7 +47,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { Button } from './ui/button';
+import { Button } from "./ui/button";
+import DisburseFunds from "./DisburseFunds";
+import UploadProof from "./UploadProof";
 
 const NGODashboard = ({ ngo }: any) => {
   const disasterData = [
@@ -61,7 +58,7 @@ const NGODashboard = ({ ngo }: any) => {
     { month: "Mar", active: 3, resolved: 4, ongoing: 2 },
     { month: "Apr", active: 6, resolved: 2, ongoing: 5 },
     { month: "May", active: 4, resolved: 5, ongoing: 3 },
-    { month: "Jun", active: 5, resolved: 3, ongoing: 4 }
+    { month: "Jun", active: 5, resolved: 3, ongoing: 4 },
   ];
 
   const focusAreaImpact = [
@@ -69,7 +66,7 @@ const NGODashboard = ({ ngo }: any) => {
     { name: "FOOD", value: 25, color: "#4ECDC4" },
     { name: "SHELTER", value: 20, color: "#45B7D1" },
     { name: "EDUCATION", value: 15, color: "#96CEB4" },
-    { name: "INFRASTRUCTURE", value: 5, color: "#FFEEAD" }
+    { name: "INFRASTRUCTURE", value: 5, color: "#FFEEAD" },
   ];
 
   const activeDisasters = [
@@ -79,7 +76,7 @@ const NGODashboard = ({ ngo }: any) => {
       location: "Kerala",
       status: "ACTIVE",
       amountUsed: 25000,
-      progress: 75
+      progress: 75,
     },
     {
       id: 2,
@@ -87,7 +84,7 @@ const NGODashboard = ({ ngo }: any) => {
       location: "Gujarat",
       status: "ONGOING",
       amountUsed: 15000,
-      progress: 45
+      progress: 45,
     },
     {
       id: 3,
@@ -95,29 +92,39 @@ const NGODashboard = ({ ngo }: any) => {
       location: "Maharashtra",
       status: "ACTIVE",
       amountUsed: 35000,
-      progress: 90
-    }
+      progress: 90,
+    },
   ];
 
   return (
-    <div className="flex min-h-screen flex-col gap-4 p-8">
-      <Card className="border-none bg-gradient-to-r from-purple-500 to-blue-500">
-        <CardContent className="flex items-center gap-6 p-6">
-          <div className="h-20 w-20 rounded-full bg-white/20 p-4">
-            <Building2 className="h-12 w-12 text-white" />
-          </div>
-          <div className="flex-1 text-white">
-            <h1 className="text-3xl font-bold">{ngo?.name || "NGO Name"}</h1>
-            <p className="text-white/80">{ngo?.mission || "Mission Statement"}</p>
-            <div className="mt-2 flex gap-4">
-              <span className="flex items-center gap-1">
-                <Globe className="h-4 w-4" />
-                {ngo?.website || "website.org"}
-              </span>
-              <span className="flex items-center gap-1">
-                <Map className="h-4 w-4" />
-                {`${ngo?.locationLat}, ${ngo?.locationLong}`}
-              </span>
+    <div className="flex min-h-screen w-full flex-col gap-4 p-8">
+      <Card className="">
+        <CardContent className="p-6">
+          <div className="flex justify-between gap-3">
+            <div className="flex items-center gap-6">
+              <div className="h-20 w-20 rounded-full bg-white/20 p-4">
+                <Building2 className="h-12 w-12" />
+              </div>
+              <div className="flex-1">
+                <h1 className="text-3xl font-bold">
+                  {ngo?.name || "NGO Name"}
+                </h1>
+                <p className="">{ngo?.mission || "Mission Statement"}</p>
+                <div className="mt-2 flex gap-4">
+                  <span className="flex items-center gap-1">
+                    <Globe className="h-4 w-4" />
+                    {ngo?.website || "website.org"}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Map className="h-4 w-4" />
+                    {`${ngo?.locationLat}, ${ngo?.locationLong}`}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <DisburseFunds />
+              <UploadProof />
             </div>
           </div>
         </CardContent>
@@ -126,7 +133,9 @@ const NGODashboard = ({ ngo }: any) => {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="relative overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Active Disasters</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Active Disasters
+            </CardTitle>
             <AlertCircle className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
@@ -138,7 +147,9 @@ const NGODashboard = ({ ngo }: any) => {
 
         <Card className="relative overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">People Reached</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              People Reached
+            </CardTitle>
             <Users className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
@@ -150,7 +161,9 @@ const NGODashboard = ({ ngo }: any) => {
 
         <Card className="relative overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Funds Utilized</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Funds Utilized
+            </CardTitle>
             <Briefcase className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
@@ -178,7 +191,9 @@ const NGODashboard = ({ ngo }: any) => {
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
               <CardTitle>Disaster Response Timeline</CardTitle>
-              <CardDescription>Monthly disaster status breakdown</CardDescription>
+              <CardDescription>
+                Monthly disaster status breakdown
+              </CardDescription>
             </div>
             <Select defaultValue="6m">
               <SelectTrigger className="w-24">
@@ -198,9 +213,27 @@ const NGODashboard = ({ ngo }: any) => {
                 <XAxis dataKey="month" />
                 <YAxis />
                 <Tooltip />
-                <Area type="monotone" dataKey="active" stackId="1" stroke="#FF6B6B" fill="#FF6B6B" />
-                <Area type="monotone" dataKey="ongoing" stackId="1" stroke="#4ECDC4" fill="#4ECDC4" />
-                <Area type="monotone" dataKey="resolved" stackId="1" stroke="#45B7D1" fill="#45B7D1" />
+                <Area
+                  type="monotone"
+                  dataKey="active"
+                  stackId="1"
+                  stroke="#FF6B6B"
+                  fill="#FF6B6B"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="ongoing"
+                  stackId="1"
+                  stroke="#4ECDC4"
+                  fill="#4ECDC4"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="resolved"
+                  stackId="1"
+                  stroke="#45B7D1"
+                  fill="#45B7D1"
+                />
               </AreaChart>
             </ResponsiveContainer>
           </CardContent>
@@ -209,7 +242,9 @@ const NGODashboard = ({ ngo }: any) => {
         <Card className="col-span-3">
           <CardHeader>
             <CardTitle>Focus Area Impact</CardTitle>
-            <CardDescription>Distribution of resources by sector</CardDescription>
+            <CardDescription>
+              Distribution of resources by sector
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={350}>
@@ -239,7 +274,9 @@ const NGODashboard = ({ ngo }: any) => {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle>Active Disaster Response</CardTitle>
-              <CardDescription>Currently ongoing relief operations</CardDescription>
+              <CardDescription>
+                Currently ongoing relief operations
+              </CardDescription>
             </div>
             <Button variant="outline" className="flex items-center gap-2">
               <Filter className="h-4 w-4" />
@@ -250,17 +287,26 @@ const NGODashboard = ({ ngo }: any) => {
         <CardContent>
           <div className="space-y-4">
             {activeDisasters.map((disaster) => (
-              <div key={disaster.id} className="flex items-center gap-4 rounded-lg border p-4">
+              <div
+                key={disaster.id}
+                className="flex items-center gap-4 rounded-lg border p-4"
+              >
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <h3 className="font-semibold">{disaster.name}</h3>
-                    <span className={`rounded-full px-2 py-1 text-xs ${
-                      disaster.status === 'ACTIVE' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'
-                    }`}>
+                    <span
+                      className={`rounded-full px-2 py-1 text-xs ${
+                        disaster.status === "ACTIVE"
+                          ? "bg-red-100 text-red-700"
+                          : "bg-blue-100 text-blue-700"
+                      }`}
+                    >
                       {disaster.status}
                     </span>
                   </div>
-                  <p className="text-sm text-muted-foreground">{disaster.location}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {disaster.location}
+                  </p>
                   <div className="mt-2">
                     <div className="flex items-center justify-between text-sm">
                       <span>Progress</span>

@@ -7,13 +7,27 @@ const prisma = new PrismaClient();
 function determineSeverity(article: any): Severity {
   const title = article.title.toLowerCase();
   const description = article.description.toLowerCase();
-  
-  const highSeverityKeywords = ['catastrophic', 'devastating', 'emergency', 'fatal', 'death'];
-  const mediumSeverityKeywords = ['severe', 'significant', 'injured', 'damage'];
-  
-  if (highSeverityKeywords.some(keyword => title.includes(keyword) || description.includes(keyword))) {
+
+  const highSeverityKeywords = [
+    "catastrophic",
+    "devastating",
+    "emergency",
+    "fatal",
+    "death",
+  ];
+  const mediumSeverityKeywords = ["severe", "significant", "injured", "damage"];
+
+  if (
+    highSeverityKeywords.some(
+      (keyword) => title.includes(keyword) || description.includes(keyword),
+    )
+  ) {
     return "HIGH";
-  } else if (mediumSeverityKeywords.some(keyword => title.includes(keyword) || description.includes(keyword))) {
+  } else if (
+    mediumSeverityKeywords.some(
+      (keyword) => title.includes(keyword) || description.includes(keyword),
+    )
+  ) {
     return "MEDIUM";
   }
   return "LOW";
@@ -21,27 +35,27 @@ function determineSeverity(article: any): Severity {
 
 function determineEmergencyType(article: any): string {
   const content = (article.title + " " + article.description).toLowerCase();
-  
+
   const types = {
-    natural: ['earthquake', 'flood', 'hurricane', 'tsunami', 'tornado'],
-    medical: ['outbreak', 'epidemic', 'pandemic', 'disease', 'health'],
-    fire: ['fire', 'wildfire', 'blaze'],
-    accident: ['crash', 'collision', 'accident', 'derailment'],
+    natural: ["earthquake", "flood", "hurricane", "tsunami", "tornado"],
+    medical: ["outbreak", "epidemic", "pandemic", "disease", "health"],
+    fire: ["fire", "wildfire", "blaze"],
+    accident: ["crash", "collision", "accident", "derailment"],
   };
 
   for (const [type, keywords] of Object.entries(types)) {
-    if (keywords.some(keyword => content.includes(keyword))) {
+    if (keywords.some((keyword) => content.includes(keyword))) {
       return type;
     }
   }
-  
-  return 'other';
+
+  return "other";
 }
 
 export async function POST(request: Request) {
   try {
     const articles = await request.json();
-    
+
     const disasters = await Promise.all(
       articles.map(async (article: any) => {
         const existingDisaster = await prisma.disaster.findFirst({
@@ -69,7 +83,7 @@ export async function POST(request: Request) {
             emergencyType: determineEmergencyType(article),
           },
         });
-      })
+      }),
     );
 
     return NextResponse.json({ disasters });
@@ -77,7 +91,7 @@ export async function POST(request: Request) {
     console.error("Error creating disasters:", error);
     return NextResponse.json(
       { error: "Failed to create disasters" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -86,16 +100,16 @@ export async function GET() {
   try {
     const disasters = await prisma.disaster.findMany({
       orderBy: {
-        published: 'desc'
-      }
+        published: "desc",
+      },
     });
-    
+
     return NextResponse.json({ disasters });
   } catch (error) {
     console.error("Error fetching disasters:", error);
     return NextResponse.json(
       { error: "Failed to fetch disasters" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

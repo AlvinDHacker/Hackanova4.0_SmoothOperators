@@ -1,6 +1,6 @@
 // app/map/page.tsx
-import Map from "~/components/Maps";
+import MapWrapper from "~/components/MapWrapper";
 
 export default function MapPage() {
-  return <Map />;
+  return <MapWrapper />;
 }

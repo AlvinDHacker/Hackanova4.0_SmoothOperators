@@ -11,3 +11,13 @@ export async function checkUser(addr: string) {
 
   return count != 0;
 }
+
+export async function getUser(id: string) {
+  const user = await db.user.findUnique({
+    where: {
+      id: id,
+    },
+  });
+
+  return user;
+}

@@ -54,14 +54,14 @@ const images = slugs.map(
 
 export default async function Home() {
     if (typeof document !== 'undefined') {
-      const drive = driver();
-      drive.highlight({
-        element: "#showdemo",
-        popover: {
-          title: "Take A Demo With Us",
-          description: "a detailed explanation on how to use Relief ResQ"
-        }
-      });
+      // const drive = driver();
+      // drive.highlight({
+      //   element: "#showdemo",
+      //   popover: {
+      //     title: "Take A Demo With Us",
+      //     description: "a detailed explanation on how to use Relief ResQ"
+      //   }
+      // });
     }
   return (
     <div>

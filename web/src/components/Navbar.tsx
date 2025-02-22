@@ -8,6 +8,7 @@ import Link from "next/link";
 // import { OrganizationSwitcher } from "@clerk/nextjs";
 // import { Authenticated } from "convex/react";
 import {
+  Coins,
   Earth,
   Home,
   Loader2,
@@ -19,6 +20,7 @@ import {
 import { BarChart2, ClipboardPen, Files, Globe } from "lucide-react";
 import { cn } from "~/lib/utils";
 import { usePathname } from "next/navigation";
+import MainLogin from "./Login/MainLogin";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -45,14 +47,12 @@ const Navbar = () => {
 
           <div className="flex items-center gap-4">
             <Link href={"/emergencies"}>
-              <div className="hidden items-center gap-8 hover:text-green-600 sm:flex">
-                Emergencies
+              <div className="hidden items-center gap-8 text-sm font-medium hover:text-green-600 hover:underline sm:flex">
+                Emergency
               </div>
             </Link>
             <ModeToggle />
-
-            {/* <HeaderActions /> */}
-            <Loader2 className="animate-spin" />
+            <MainLogin />
           </div>
         </div>
       </div>
@@ -90,19 +90,19 @@ const Navbar = () => {
               </Link>
             </DockIcon>
             <DockIcon>
-              <Link href={"/emergencies/notes"}>
-                <ClipboardPen
+              <Link href={"/funds"}>
+                <Coins
                   className={cn("text-second size-6", {
-                    "text-green-600": pathname.endsWith("/notes"),
+                    "text-green-600": pathname.endsWith("/funds"),
                   })}
                 />
               </Link>
             </DockIcon>
             <DockIcon>
-              <Link href={"/emergencies/profile"}>
+              <Link href={"/dashboard"}>
                 <User2
                   className={cn("text-second size-6", {
-                    "text-green-600": pathname.endsWith("/profile"),
+                    "text-green-600": pathname.endsWith("/dashboard"),
                   })}
                 />
               </Link>
