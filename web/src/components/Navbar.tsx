@@ -51,8 +51,6 @@ const Navbar = () => {
               </div>
             </Link>
             <ModeToggle />
-
-            {/* <HeaderActions /> */}
             <Loader2 className="animate-spin" />
           </div>
         </div>
