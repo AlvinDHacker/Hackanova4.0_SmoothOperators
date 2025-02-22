@@ -19,7 +19,6 @@ export default function DashboardPage() {
 
   const { user } = useUser();
   const [info, setInfo] = useState<NGO | null>(null);
-  const [infoD, setInfoD] = useState<User | null>(null);
   useEffect(() => {
     if (user?.userType === "NGO") {
       const fetchNGOInfo = async () => {
@@ -28,13 +27,6 @@ export default function DashboardPage() {
       };
 
       fetchNGOInfo();
-    } else {
-      const fetchDonorInfo = async () => {
-        const donor = await getDonorInfo(user!.id);
-        setInfoD(donor);
-      };
-
-      fetchDonorInfo();
     }
   }, [user]);
 
