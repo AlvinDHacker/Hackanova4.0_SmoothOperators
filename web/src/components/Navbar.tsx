@@ -8,6 +8,7 @@ import Link from "next/link";
 // import { OrganizationSwitcher } from "@clerk/nextjs";
 // import { Authenticated } from "convex/react";
 import {
+  Coins,
   Earth,
   Home,
   Loader2,
@@ -90,19 +91,19 @@ const Navbar = () => {
               </Link>
             </DockIcon>
             <DockIcon>
-              <Link href={"/emergencies/notes"}>
-                <ClipboardPen
+              <Link href={"/funds"}>
+                <Coins
                   className={cn("text-second size-6", {
-                    "text-green-600": pathname.endsWith("/notes"),
+                    "text-green-600": pathname.endsWith("/funds"),
                   })}
                 />
               </Link>
             </DockIcon>
             <DockIcon>
-              <Link href={"/emergencies/profile"}>
+              <Link href={"/dashboard"}>
                 <User2
                   className={cn("text-second size-6", {
-                    "text-green-600": pathname.endsWith("/profile"),
+                    "text-green-600": pathname.endsWith("/dashboard"),
                   })}
                 />
               </Link>

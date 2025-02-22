@@ -9,6 +9,8 @@ import {
   Map,
   Earth,
   Home,
+  User2,
+  Coins,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -67,13 +69,13 @@ export default function SideNav() {
             className={cn(
               "flex min-h-0 flex-1 flex-row gap-3 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
               {
-                "text-green-600": pathname.endsWith("/notes"),
+                "text-green-600": pathname.endsWith("/funds"),
               },
             )}
-            href="/emergencies/notes"
+            href="/funds"
           >
-            <ClipboardPen />
-            Notes
+            <Coins />
+            Funds
           </Link>
         </li>
         <li>
@@ -81,13 +83,13 @@ export default function SideNav() {
             className={cn(
               "flex min-h-0 flex-1 flex-row gap-3 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
               {
-                "text-green-600": pathname.endsWith("/analytics"),
+                "text-green-600": pathname.endsWith("/dashboard"),
               },
             )}
-            href="/emergencies/analytics"
+            href="/dashboard"
           >
-            <BarChart2 />
-            Analytics
+            <User2 />
+            Dashboard
           </Link>
         </li>
       </ul>
