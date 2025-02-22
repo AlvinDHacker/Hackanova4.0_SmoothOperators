@@ -45,7 +45,7 @@ const DonorLogin = () => {
     userType: "DONOR",
   });
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState<SiweMessage>();
   const [signature, setSignature] = useState("");
   const [signer, setSigner] = useState<JsonRpcSigner>();
   const [isOpen, setIsOpen] = useState(false);
@@ -121,7 +121,7 @@ const DonorLogin = () => {
           ...data,
         });
       } else {
-        setMessage(JSON.stringify(message));
+        setMessage(message);
         setSignature(signature);
         setSigner(tsigner);
         openDialog();
