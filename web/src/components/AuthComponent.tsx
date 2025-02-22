@@ -32,9 +32,10 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       status === "unauthenticated" &&
       currPath !== "/login" &&
       currPath !== "/home" &&
-      currPath !== "/signup"
+      currPath !== "/signup" &&
+      currPath != "/"
     ) {
-      router.push("/login");
+      router.push("/");
     } else if (status === "authenticated") {
       findUser();
     }
