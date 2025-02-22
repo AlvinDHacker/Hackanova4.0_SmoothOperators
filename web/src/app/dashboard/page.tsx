@@ -4,8 +4,9 @@ import NgoDashboard from "~/components/NgoDashboard";
 import SideNav from "~/components/Sidenav";
 import { useUser } from "~/components/AuthComponent";
 import { useEffect, useState } from "react";
-import { getNGOInfo } from "../api/getNGOInfo/route";
-import { getDonorInfo } from "../api/getDonorInfo/route";
+import { getNGOInfo } from "../api/getNGOInfo";
+import { getDonorInfo } from "../api/getDonorInfo";
+import { User } from "@prisma/client";
 
 export default function DashboardPage() {
   interface NGO {
@@ -16,20 +17,9 @@ export default function DashboardPage() {
     website: string | null;
   }
 
-  interface Donor {
-    id: string;
-    name: string | null;
-    email: string | null;
-    phoneNo: string;
-    aadhar: string | null;
-    accounts: {
-      id: string;
-      provider: string;
-    }[];
-  }
   const { user } = useUser();
   const [info, setInfo] = useState<NGO | null>(null);
-  const [infoD, setInfoD] = useState<Donor | null>(null);
+  const [infoD, setInfoD] = useState<User | null>(null);
   useEffect(() => {
     if (user?.userType === "NGO") {
       const fetchNGOInfo = async () => {
@@ -63,30 +53,7 @@ export default function DashboardPage() {
             }}
           />
         ) : (
-          <DonorDashboard
-            user={{
-              id: infoD?.id,
-              name: infoD?.name,
-              email: infoD?.email,
-              phone: infoD?.phoneNo,
-              address: "123 Main St, City, Country",
-              donations: [
-                infoD?.accounts,
-                // {
-                //   id: infoD?.accounts.id,
-                //   amount: 100,
-                //   date: "2023-01-01",
-                //   cause: "Medical Relief",
-                // },
-                // {
-                //   id: "2",
-                //   amount: 50,
-                //   date: "2023-02-01",
-                //   cause: "Education",
-                // },
-              ],
-            }}
-          />
+          <DonorDashboard />
         )}
       </div>
     </div>

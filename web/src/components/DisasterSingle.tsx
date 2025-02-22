@@ -1,5 +1,4 @@
 "use client";
-import { type Location } from "~/types/map";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { Building2, ChevronLeft, ExternalLink, Landmark } from "lucide-react";
@@ -23,12 +22,9 @@ import {
 import { LabelledPieChart } from "./Charts/LabelledPieChart";
 import { NumberTicker } from "./ui/number-ticker";
 import { AreaChartSimple } from "./Charts/AreaChart";
+import { Disaster } from "@prisma/client";
 
-interface DisasterSingleProps {
-  location: Location;
-}
-
-const DisasterSingle: React.FC<DisasterSingleProps> = ({ location }) => {
+const DisasterSingle = ({ location }: { location: Disaster }) => {
   const router = useRouter();
 
   const simpleareachart = [
