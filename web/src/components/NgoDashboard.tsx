@@ -97,10 +97,10 @@ const NGODashboard = ({ ngo }: any) => {
   ];
 
   return (
-    <div className="flex min-h-screen w-full flex-col gap-4 p-8">
+    <div className="flex min-h-screen w-full flex-col gap-4 p-2 sm:p-8">
       <Card className="">
         <CardContent className="p-6">
-          <div className="flex justify-between gap-3">
+          <div className="flex flex-col justify-between gap-3 sm:flex-row">
             <div className="flex items-center gap-6">
               <div className="h-20 w-20 rounded-full bg-white/20 p-4">
                 <Building2 className="h-12 w-12" />
@@ -110,7 +110,7 @@ const NGODashboard = ({ ngo }: any) => {
                   {ngo?.name || "NGO Name"}
                 </h1>
                 <p className="">{ngo?.mission || "Mission Statement"}</p>
-                <div className="mt-2 flex gap-4">
+                <div className="mt-2 flex flex-col gap-1 sm:flex-row sm:gap-4">
                   <span className="flex items-center gap-1">
                     <Globe className="h-4 w-4" />
                     {ngo?.website || "website.org"}
@@ -207,7 +207,7 @@ const NGODashboard = ({ ngo }: any) => {
               </SelectContent>
             </Select>
           </CardHeader>
-          <CardContent>
+          <CardContent className="w-full">
             <ResponsiveContainer width="100%" height={350}>
               <AreaChart data={disasterData} stackOffset="expand">
                 <XAxis dataKey="month" />
