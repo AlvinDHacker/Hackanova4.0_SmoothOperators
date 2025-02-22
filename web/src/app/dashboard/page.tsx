@@ -55,7 +55,7 @@ export default function DashboardPage() {
         {user?.userType == "NGO" ? (
           <NgoDashboard
             ngo={{
-              name: user.name,
+              name: user?.name,
               mission: info?.mission,
               website: info?.website,
               locationLat: info?.locationLat,
