@@ -4,8 +4,7 @@ import { db } from "~/server/db";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { SiweMessage } from "siwe";
 import type { AdapterUser } from "next-auth";
-import { UserType } from "@prisma/client";
-import { FocusArea } from "@prisma/client";
+import { UserType, FocusArea } from "@prisma/client";
 
 declare module "next-auth" {
   interface Session {
@@ -14,7 +13,13 @@ declare module "next-auth" {
       name?: string | null;
       email?: string | null;
       walletId: string;
+      emailVerified?: Date | null;
     };
+  }
+
+  interface User {
+    walletId?: string; // Add walletId to the User interface
+    userType?: UserType;
   }
 
   interface AdapterUser {
@@ -57,14 +62,17 @@ export const authConfig: NextAuthConfig = {
         message: { label: "Message", type: "text" },
         signature: { label: "Signature", type: "text" },
       },
-      async authorize(credentials: Partial<Credentials>) {
+      async authorize(credentials) {
         try {
-          if (!credentials?.message || !credentials?.signature) {
+          // Safely cast credentials to the Credentials interface
+          const creds = credentials as Partial<Credentials>;
+
+          if (!creds.message || !creds.signature) {
             throw new Error("Missing credentials");
           }
 
-          const message = credentials.message;
-          const signature = credentials.signature;
+          const message = creds.message;
+          const signature = creds.signature;
 
           // Verify SIWE message
           const siwe = new SiweMessage(JSON.parse(message));
@@ -77,73 +85,66 @@ export const authConfig: NextAuthConfig = {
           });
 
           if (!user) {
-            if (credentials.userType === "DONOR") {
+            if (creds.userType === "DONOR") {
               user = await db.user.create({
                 data: {
                   userType: UserType.DONOR,
                   walletId: siwe.address,
-                  name: credentials.name || "",
-                  phoneNo: credentials.phoneNo || "",
-                  aadhar: credentials.aadhar || "",
+                  name: creds.name || "",
+                  phoneNo: creds.phoneNo || "",
+                  aadhar: creds.aadhar || "",
                   did: `did:ethr:${siwe.address}`,
                 },
               });
-            } else if (credentials.userType === "NGO") {
+            } else if (creds.userType === "NGO") {
               user = await db.user.create({
                 data: {
                   userType: UserType.NGO,
                   walletId: siwe.address,
-                  name: credentials.name || "",
-                  phoneNo: credentials.phoneNo || "",
+                  name: creds.name || "",
+                  phoneNo: creds.phoneNo || "",
                   did: `did:ethr:${siwe.address}`,
                 },
               });
 
               const ngo = await db.nGO.create({
                 data: {
-                  name: credentials.name || "",
-                  mission: credentials.mission || "",
-                  vision: credentials.vision || "",
-                  locationLat: credentials.lat
-                    ? parseFloat(credentials.lat)
-                    : 0,
-                  locationLong: credentials.lon
-                    ? parseFloat(credentials.lon)
-                    : 0,
-                  website: credentials.website || "",
-                  description: credentials.desc || "",
+                  name: creds.name || "",
+                  mission: creds.mission || "",
+                  vision: creds.vision || "",
+                  locationLat: creds.lat ? parseFloat(creds.lat) : 0,
+                  locationLong: creds.lon ? parseFloat(creds.lon) : 0,
+                  website: creds.website || "",
+                  description: creds.desc || "",
                   userId: user.id,
                 },
               });
 
-              const focusArea = JSON.parse(credentials.focusArea || "[]");
-              const validAreas = [
-                FocusArea.FOOD,
-                FocusArea.MEDICAL,
-                FocusArea.TRAVEL,
-                FocusArea.INFRASTRUCTURE,
-                FocusArea.OTHER,
-              ];
+              const focusArea = creds.focusArea
+                ? JSON.parse(creds.focusArea)
+                : [];
+              const validAreas = Object.values(FocusArea);
 
               await Promise.all(
-                focusArea.map(async (v: number) => {
-                  if (validAreas[v]) {
+                focusArea
+                  .filter((v: string) => validAreas.includes(v as FocusArea))
+                  .map(async (v: string) => {
                     await db.nGOFocusArea.create({
                       data: {
                         ngoId: ngo.id,
-                        focusArea: validAreas[v] as FocusArea,
+                        focusArea: v as FocusArea,
                       },
                     });
-                  }
-                }),
+                  }),
               );
             }
           }
 
+          // Return the user object with walletId
           return {
             id: user?.id,
-            name: user?.name,
-            walletId: user?.walletId,
+            name: user?.name ?? null,
+            walletId: user?.walletId ?? "",
           };
         } catch (error) {
           console.error("SIWE Verification Failed:", error);
@@ -158,10 +159,10 @@ export const authConfig: NextAuthConfig = {
       if (token.sub) {
         session.user = {
           id: token.sub,
-          walletId: (token.walletId as string) || "",
+          walletId: (token.walletId as string) ?? "",
           name: session.user?.name ?? null,
           email: session.user?.email ?? null,
-          emailVerified: new Date(),
+          emailVerified: session.user?.emailVerified ?? null,
         };
       }
       return session;
@@ -169,7 +170,7 @@ export const authConfig: NextAuthConfig = {
     async jwt({ token, user }) {
       if (user) {
         token.sub = user.id;
-        token.walletId = user.walletId || "";
+        token.walletId = user.walletId ?? ""; // Now walletId is recognized on the User type
       }
       return token;
     },

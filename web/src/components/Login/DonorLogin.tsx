@@ -12,12 +12,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSeparator,
-  InputOTPSlot,
-} from "~/components/ui/input-otp";
+// import {
+//   InputOTP,
+//   InputOTPGroup,
+//   InputOTPSeparator,
+//   InputOTPSlot,
+// } from "~/components/ui/input-otp";
 import { Separator } from "../ui/separator";
 import { AnimatePresence, motion } from "motion/react";
 import { signIn } from "next-auth/react";
@@ -232,7 +232,7 @@ const DonorLogin = () => {
               >
                 <div className="grid gap-4 py-4">
                   <Label htmlFor="otp">Enter OTP</Label>
-                  <InputOTP maxLength={6}>
+                  {/* <InputOTP maxLength={6}>
                     <InputOTPGroup>
                       <InputOTPSlot index={0} />
                       <InputOTPSlot index={1} />
@@ -244,7 +244,7 @@ const DonorLogin = () => {
                       <InputOTPSlot index={4} />
                       <InputOTPSlot index={5} />
                     </InputOTPGroup>
-                  </InputOTP>
+                  </InputOTP> */}
                 </div>
                 <Separator />
                 <DialogFooter>
