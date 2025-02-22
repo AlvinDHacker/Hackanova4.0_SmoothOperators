@@ -34,6 +34,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import DisburseFunds from "./DisburseFunds";
 
 const DonorDashboard = ({ user }: any) => {
   const donationHistory = [
@@ -65,23 +66,30 @@ const DonorDashboard = ({ user }: any) => {
   return (
     <div className="flex min-h-screen w-full flex-col gap-4 p-8">
       <Card className="">
-        <CardContent className="flex items-center gap-6 p-6">
-          <div className="h-20 w-20 rounded-full bg-white/20 p-4">
-            <User2 className="h-12 w-12" />
-          </div>
-          <div className="flex-1">
-            <h1 className="text-3xl font-bold">{user?.name || "NGO Name"}</h1>
-            <p className="">{user?.email || "xyz@gmail.com"}</p>
-            <div className="mt-2 flex gap-4">
-              <span className="flex items-center gap-1">
-                <Phone className="h-4 w-4" />
-                {user?.phone || "website.org"}
-              </span>
-              <span className="flex items-center gap-1">
-                <Map className="h-4 w-4" />
-                {`${user?.location}`}
-              </span>
+        <CardContent className="p-6">
+          <div className="flex justify-between gap-3">
+            <div className="flex items-center gap-6">
+              <div className="h-20 w-20 rounded-full bg-white/20 p-4">
+                <User2 className="h-12 w-12" />
+              </div>
+              <div className="flex-1">
+                <h1 className="text-3xl font-bold">
+                  {user?.name || "NGO Name"}
+                </h1>
+                <p className="">{user?.email || "xyz@gmail.com"}</p>
+                <div className="mt-2 flex gap-4">
+                  <span className="flex items-center gap-1">
+                    <Phone className="h-4 w-4" />
+                    {user?.phone || "website.org"}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Map className="h-4 w-4" />
+                    {`${user?.location}`}
+                  </span>
+                </div>
+              </div>
             </div>
+            <DisburseFunds />
           </div>
         </CardContent>
       </Card>
