@@ -36,7 +36,7 @@ import { BrowserProvider, Signer, Contract, parseEther } from "ethers";
 import contractAbi from "../../contract/ResQ.json";
 import type { ResQ } from "typechain-types/ResQ";
 
-const API_BASE_URL = "http://127.0.0.1:5000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 const img = `https://cdn.simpleicons.org/ethereum/ethereum`;
 
 const EmergencyCard = ({ article, openDialog }: any) => (
@@ -149,14 +149,14 @@ const Emergency = () => {
   //     });
   //     const data = await response.json();
   //     const uniqueArticles = data.disasters?.reduce((acc: any[], current: any) => {
-  //       const isDuplicate = acc.find((item: any) => 
-  //         item.title === current.title && 
+  //       const isDuplicate = acc.find((item: any) =>
+  //         item.title === current.title &&
   //         new Date(item.published).getTime() === new Date(current.published).getTime()
   //       );
   //       if (!isDuplicate) {
   //         acc.push(current);
   //       }
-  //       return acc; 
+  //       return acc;
   //     }, []) || [];
 
   //     setArticles(uniqueArticles);
@@ -170,7 +170,7 @@ const Emergency = () => {
   //   }
   // };
 
-  const fetchArticles = async (endpoint = '/emergency-news') => {
+  const fetchArticles = async (endpoint = "/emergency-news") => {
     try {
       setLoading(true);
       const response = await fetch(`${API_BASE_URL}${endpoint}`);
@@ -178,7 +178,7 @@ const Emergency = () => {
       setArticles(data.articles || []);
       setError(null);
     } catch (err) {
-      setError('Failed to fetch emergency news');
+      setError("Failed to fetch emergency news");
       setArticles([]);
     } finally {
       setLoading(false);
@@ -249,7 +249,7 @@ const Emergency = () => {
       console.error("Error depositing funds:", error);
     }
   };
-  
+
   const handleSearch = (e: any) => {
     e.preventDefault();
     const searchInput = e.target.elements.search.value;
