@@ -76,7 +76,7 @@ export default async function Home() {
           >
             <div className="bg-discount-gradient mb-2 flex flex-row items-center rounded-[10px] px-4 py-[6px]"></div>
 
-            <div className="mx-auto w-full sm:w-[80%]">
+            <div className="mx-auto w-full sm:w-[80%] pb-0 sm:pb-28">
               <Badge className={`font-poppins mb-4 ml-2 text-sm font-normal`}>
                 <span>Transparent. Swift. Corruption-Free</span>
               </Badge>
