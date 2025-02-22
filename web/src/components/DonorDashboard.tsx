@@ -102,7 +102,7 @@ const DonorDashboard = ({ user }: any) => {
             element: "#ngossupported",
             popover: {
               title: "Your Partnered NGOs",
-              description: "View the verified NGOs you’ve supported, ensuring transparency and accountability in fund utilization.",
+              description: "View the verified NGOs you have supported, ensuring transparency and accountability in fund utilization.",
             },
           },
         ],
