@@ -22,11 +22,18 @@ import { Separator } from "../ui/separator";
 import { AnimatePresence, motion } from "motion/react";
 import { signIn } from "next-auth/react";
 import { SiweMessage, generateNonce } from "siwe";
-import { BrowserProvider, Contract, JsonRpcSigner } from "ethers";
+import { BrowserProvider, Contract } from "ethers";
 import contractAbi from "../../../contract/ResQ.json";
 import { checkUser } from "~/app/api/manageUser";
 import type { ResQ } from "typechain-types/ResQ";
 import type { JsonRpcSigner } from "ethers";
+
+type FormData = {
+  name: string;
+  phoneNo: string;
+  aadhar: string;
+  userType: string;
+};
 
 const DonorLogin = () => {
   const [next, setNext] = useState(false);
