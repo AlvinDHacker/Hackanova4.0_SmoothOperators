@@ -18,6 +18,7 @@ import NgoLogin from "./NgoLogin";
 import { useUser } from "../AuthComponent";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { signOut } from "next-auth/react";
+import { Badge } from "../ui/badge";
 
 const MainLogin = () => {
   const img = `https://cdn.simpleicons.org/ethereum/ethereum`;
@@ -37,7 +38,8 @@ const MainLogin = () => {
               </DialogDescription>
             </DialogHeader>
             <div className="h-full gap-4 space-y-2 text-sm text-gray-500">
-              <Card className="flex w-full justify-between gap-3 px-1.5">
+              <div id ="donorlogin">
+                <Card className="flex w-full justify-between gap-3 px-1.5">
                 <div className="flex">
                   <img
                     src="https://api.dicebear.com/9.x/lorelei/svg?seed=Brian"
@@ -56,6 +58,8 @@ const MainLogin = () => {
                   <DonorLogin />
                 </div>
               </Card>
+              </div>
+              <div id ="vendorlogin">
               <Card className="flex w-full justify-between gap-3 px-1.5">
                 <div className="flex">
                   <img
@@ -73,6 +77,8 @@ const MainLogin = () => {
                   <VendorLogin />
                 </div>
               </Card>
+              </div>
+              <div id ="NGOlogin">
               <Card className="flex w-full justify-between gap-3 px-1.5">
                 <div className="flex">
                   <img
@@ -90,6 +96,7 @@ const MainLogin = () => {
                   <NgoLogin />
                 </div>
               </Card>
+              </div>
             </div>
             <Separator />
           </DialogContent>
@@ -101,7 +108,7 @@ const MainLogin = () => {
           }}
           variant="outline"
         >
-          Logout
+          Logout | <Badge className="px-4 text-xs">{user?.userType}</Badge>
         </Button>
       )}
     </div>
