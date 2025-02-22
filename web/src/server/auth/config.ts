@@ -5,6 +5,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { SiweMessage } from "siwe";
 import type { AdapterUser } from "next-auth";
 import { UserType } from "@prisma/client";
+import { FocusArea } from "@prisma/client";
 
 declare module "next-auth" {
   interface Session {
@@ -18,6 +19,7 @@ declare module "next-auth" {
 
   interface AdapterUser {
     walletId?: string;
+    userType?: UserType;
   }
 
   interface JWT {
@@ -26,9 +28,27 @@ declare module "next-auth" {
   }
 }
 
+// Define credentials type explicitly
+interface Credentials {
+  message: string;
+  signature: string;
+  userType?: "DONOR" | "NGO";
+  name?: string;
+  phoneNo?: string;
+  aadhar?: string;
+  did?: string;
+  mission?: string;
+  vision?: string;
+  lat?: string;
+  lon?: string;
+  website?: string;
+  desc?: string;
+  focusArea?: string;
+}
+
 export const authConfig: NextAuthConfig = {
   session: {
-    strategy: "jwt", // Force using JWT session storage
+    strategy: "jwt",
   },
   providers: [
     CredentialsProvider({
@@ -37,14 +57,14 @@ export const authConfig: NextAuthConfig = {
         message: { label: "Message", type: "text" },
         signature: { label: "Signature", type: "text" },
       },
-      async authorize(credentials) {
+      async authorize(credentials: Partial<Credentials>) {
         try {
           if (!credentials?.message || !credentials?.signature) {
             throw new Error("Missing credentials");
           }
 
-          const message = credentials.message as string;
-          const signature = credentials.signature as string;
+          const message = credentials.message;
+          const signature = credentials.signature;
 
           // Verify SIWE message
           const siwe = new SiweMessage(JSON.parse(message));
@@ -52,72 +72,78 @@ export const authConfig: NextAuthConfig = {
 
           if (!result.success) return null;
 
-          // Check if user exists in the database by walletId
           let user = await db.user.findUnique({
             where: { walletId: siwe.address },
           });
 
-          console.log(user);
-          // If user doesn't exist, create a new one
           if (!user) {
-            if (credentials.userType == "DONOR") {
+            if (credentials.userType === "DONOR") {
               user = await db.user.create({
                 data: {
                   userType: UserType.DONOR,
                   walletId: siwe.address,
-                  name: credentials.name,
-                  phoneNo: credentials.phoneNo,
-                  aadhar: credentials.aadhar,
+                  name: credentials.name || "",
+                  phoneNo: credentials.phoneNo || "",
+                  aadhar: credentials.aadhar || "",
                   did: `did:ethr:${siwe.address}`,
                 },
               });
-            }
-
-            if (credentials.userType == "NGO") {
+            } else if (credentials.userType === "NGO") {
               user = await db.user.create({
                 data: {
                   userType: UserType.NGO,
                   walletId: siwe.address,
-                  name: credentials.name,
-                  phoneNo: credentials.phoneNo,
+                  name: credentials.name || "",
+                  phoneNo: credentials.phoneNo || "",
                   did: `did:ethr:${siwe.address}`,
                 },
               });
 
-              let ngo = await db.nGO.create({
+              const ngo = await db.nGO.create({
                 data: {
-                  name: credentials.name,
-                  mission: credentials.mission as string,
-                  vision: credentials.vision as string,
-                  locationLat: parseFloat(credentials.lat),
-                  locationLong: parseFloat(credentials.lon),
-                  website: credentials.website as string,
-                  description: credentials.desc as string,
+                  name: credentials.name || "",
+                  mission: credentials.mission || "",
+                  vision: credentials.vision || "",
+                  locationLat: credentials.lat
+                    ? parseFloat(credentials.lat)
+                    : 0,
+                  locationLong: credentials.lon
+                    ? parseFloat(credentials.lon)
+                    : 0,
+                  website: credentials.website || "",
+                  description: credentials.desc || "",
                   userId: user.id,
                 },
               });
 
               const focusArea = JSON.parse(credentials.focusArea || "[]");
-
-              let fa = ["FOOD", "MEDICAL", "TRAVEL", "INFRASTRUCTURE", "OTHER"];
+              const validAreas = [
+                FocusArea.FOOD,
+                FocusArea.MEDICAL,
+                FocusArea.TRAVEL,
+                FocusArea.INFRASTRUCTURE,
+                FocusArea.OTHER,
+              ];
 
               await Promise.all(
-                focusArea.map(async (v) => {
-                  await db.nGOFocusArea.create({
-                    data: {
-                      ngoId: ngo.id,
-                      focusArea: fa[v as number],
-                    },
-                  });
+                focusArea.map(async (v: number) => {
+                  if (validAreas[v]) {
+                    await db.nGOFocusArea.create({
+                      data: {
+                        ngoId: ngo.id,
+                        focusArea: validAreas[v] as FocusArea,
+                      },
+                    });
+                  }
                 }),
               );
             }
           }
 
           return {
-            id: user.id,
-            name: user.name,
-            walletId: user.walletId,
+            id: user?.id,
+            name: user?.name,
+            walletId: user?.walletId,
           };
         } catch (error) {
           console.error("SIWE Verification Failed:", error);
@@ -132,9 +158,9 @@ export const authConfig: NextAuthConfig = {
       if (token.sub) {
         session.user = {
           id: token.sub,
-          walletId: token.walletId,
-          name: session.user?.name ?? null, // Preserve existing name if present
-          email: session.user?.email ?? null, // Preserve existing email if present
+          walletId: (token.walletId as string) || "",
+          name: session.user?.name ?? null,
+          email: session.user?.email ?? null,
           emailVerified: new Date(),
         };
       }

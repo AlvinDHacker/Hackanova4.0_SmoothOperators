@@ -1,10 +1,19 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { ExternalLink, Filter, ChevronRight, Search, Eye } from "lucide-react";
-import Link from "next/link";
+import { ExternalLink, Filter, Search, SmartphoneNfc } from "lucide-react";
 import { motion } from "framer-motion";
 import { Badge } from "~/components/ui/badge";
+import { Label } from "~/components/ui/label";
 import { Button } from "~/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "~/components/ui/dialog";
 import {
   Card,
   CardContent,
@@ -22,15 +31,18 @@ import {
 } from "~/components/ui/select";
 import { Input } from "~/components/ui/input";
 import { Separator } from "./ui/separator";
-import DonorPay from "./DonorPay";
+import axios from "axios";
+import { BrowserProvider, Signer, Contract, parseEther } from "ethers";
+import contractAbi from "../../contract/ResQ.json";
+import type { ResQ } from "typechain-types/ResQ";
 
 const API_BASE_URL = "http://127.0.0.1:5000";
+const img = `https://cdn.simpleicons.org/ethereum/ethereum`;
 
-const EmergencyCard = ({ article }: any) => (
+const EmergencyCard = ({ article, openDialog }: any) => (
   <Card className="flex h-full flex-col justify-between">
     <CardHeader>
       <div className="flex justify-between">
-        {/* <div className="flex"> */}
         <div>
           <CardTitle className="mb-1 text-lg">
             {article.title.split(" - ")[0]}
@@ -54,7 +66,6 @@ const EmergencyCard = ({ article }: any) => (
             </div>
           </CardDescription>
         </div>
-        {/* </div> */}
       </div>
     </CardHeader>
     <CardContent className="pb-2">
@@ -76,11 +87,11 @@ const EmergencyCard = ({ article }: any) => (
     <CardFooter className="border-t pt-4">
       <div className="flex w-full justify-end gap-3">
         <a href={article.link} target="_blank" rel="noopener noreferrer">
-          <Button variant={"outline"} className="">
-            View Report
-          </Button>
+          <Button variant={"outline"}>View Report</Button>
         </a>
-        <DonorPay />
+        <Button variant="outline" onClick={openDialog}>
+          <SmartphoneNfc />
+        </Button>
         <a href={`/emergencies/map/${article.title}`}>
           <Button className="bg-green-600 text-white hover:bg-green-500 dark:bg-green-700">
             <ExternalLink />
@@ -98,13 +109,45 @@ const Emergency = () => {
   const [selectedSeverity, setSelectedSeverity] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [ethPrice, setEthPrice] = useState<number | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [sepoliaEth, setSepoliaEth] = useState<string>("");
+  const [convertedAmount, setConvertedAmount] = useState<number>(0);
 
-  const fetchArticles = async (endpoint = "/emergency-news") => {
+  const fetchArticles = async (endpoint = "/api/disasters") => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}${endpoint}`);
+
+      if (endpoint === "/api/disasters") {
+        const newsResponse = await fetch(`${API_BASE_URL}/emergency-news`);
+        const newsData = await newsResponse.json();
+
+        await fetch("/api/disasters", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newsData.articles),
+        });
+      }
+
+      let queryEndpoint = "/api/disasters";
+      if (endpoint.includes("by-type")) {
+        queryEndpoint += `?type=${endpoint.split("/").pop()}`;
+      } else if (endpoint.includes("by-severity")) {
+        queryEndpoint += `?severity=${endpoint.split("/").pop()}`;
+      } else if (endpoint.includes("search")) {
+        queryEndpoint += `?search=${endpoint.split("/").pop()}`;
+      }
+
+      const response = await fetch(queryEndpoint, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       const data = await response.json();
-      setArticles(data.articles || []);
+      setArticles(data.disasters || []);
       setError(null);
     } catch (err) {
       setError("Failed to fetch emergency news");
@@ -115,6 +158,28 @@ const Emergency = () => {
   };
 
   useEffect(() => {
+    if (ethPrice && sepoliaEth) {
+      setConvertedAmount(
+        parseFloat((parseFloat(sepoliaEth) * ethPrice).toFixed(2)),
+      );
+    } else {
+      setConvertedAmount(0);
+    }
+  }, [sepoliaEth, ethPrice]);
+
+  useEffect(() => {
+    const fetchPrice = async () => {
+      try {
+        const response = await axios.get(
+          "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=inr",
+        );
+        setEthPrice(response.data.ethereum.inr);
+      } catch (error) {
+        console.error("Error fetching ETH price:", error);
+      }
+    };
+
+    fetchPrice();
     fetchArticles();
   }, []);
 
@@ -130,24 +195,31 @@ const Emergency = () => {
     }
   }, [selectedCategory, selectedSeverity, searchKeyword]);
 
-  const handleSearch = (e: any) => {
-    e.preventDefault();
-    const searchInput = e.target.elements.search.value;
-    setSearchKeyword(searchInput);
-    setSelectedCategory("all");
-    setSelectedSeverity("all");
-  };
+  const handleTransaction = async () => {
+    const provider = new BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
 
-  const handleCategoryChange = (value: any) => {
-    setSelectedCategory(value);
-    setSelectedSeverity("all");
-    setSearchKeyword("");
-  };
+    if (!contractAddress) {
+      throw new Error("Contract address is missing in .env");
+    }
 
-  const handleSeverityChange = (value: any) => {
-    setSelectedSeverity(value);
-    setSelectedCategory("all");
-    setSearchKeyword("");
+    const contractInstance: ResQ = new Contract(
+      contractAddress,
+      contractAbi.abi,
+      signer,
+    ) as unknown as ResQ;
+
+    try {
+      const tx = await contractInstance.depositFunds({
+        value: parseEther(sepoliaEth), // Sending 1 ETH
+      });
+
+      await tx.wait(); // Wait for the transaction to be confirmed
+      console.log("Deposit successful!");
+    } catch (error) {
+      console.error("Error depositing funds:", error);
+    }
   };
 
   return (
@@ -162,7 +234,7 @@ const Emergency = () => {
       <div className="mb-6 flex flex-wrap items-center gap-4">
         <div className="flex flex-wrap items-center gap-4">
           <Filter className="h-5 w-5" />
-          <Select value={selectedCategory} onValueChange={handleCategoryChange}>
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Emergency Type" />
             </SelectTrigger>
@@ -176,7 +248,7 @@ const Emergency = () => {
             </SelectContent>
           </Select>
 
-          <Select value={selectedSeverity} onValueChange={handleSeverityChange}>
+          <Select value={selectedSeverity} onValueChange={setSelectedSeverity}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Severity" />
             </SelectTrigger>
@@ -189,24 +261,19 @@ const Emergency = () => {
           </Select>
         </div>
 
-        <form onSubmit={handleSearch} className="flex gap-2">
+        <form className="flex gap-2">
           <Input
             type="search"
             name="search"
             placeholder="Search emergencies..."
             className="w-[200px]"
+            onChange={(e) => setSearchKeyword(e.target.value)}
           />
           <Button type="submit" variant="secondary">
             <Search className="h-4 w-4" />
           </Button>
         </form>
       </div>
-
-      {error && (
-        <div className="mb-4 rounded-lg bg-red-100 p-4 text-red-700">
-          {error}
-        </div>
-      )}
 
       {loading ? (
         <div className="flex h-40 items-center justify-center">
@@ -221,20 +288,56 @@ const Emergency = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: index * 0.1 }}
             >
-              <EmergencyCard article={article} />
+              <EmergencyCard
+                article={article}
+                openDialog={() => setIsOpen(true)}
+              />
             </motion.div>
           ))}
         </div>
       )}
 
-      <div className="flex justify-center">
-        <Link href="/emergencies">
-          <Button variant="outline" size="lg">
-            View All Emergencies
-            <ChevronRight className="ml-2 h-4 w-4" />
-          </Button>
-        </Link>
-      </div>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Pay Now, Help when needed</DialogTitle>
+            <DialogDescription>
+              Set up money in a wallet to pay automatically when an emergency
+              occurs
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="amount">Amount (ETH)</Label>
+              <Input
+                onChange={(e) => setSepoliaEth(e.target.value)}
+                id="amount"
+                placeholder="Amount in ETH"
+              />
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="converted">Converted Currency</Label>
+              <Input
+                id="converted"
+                disabled
+                value={`${convertedAmount} Rs`}
+                placeholder="Amount in Rs which is converted"
+              />
+            </div>
+          </div>
+          <Separator />
+          <DialogFooter>
+            <Button
+              onClick={handleTransaction}
+              variant={"outline"}
+              type="submit"
+            >
+              <img src={img} height={15} width={15} alt="Hi" />
+              Pay Now with Ethereum
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
