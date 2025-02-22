@@ -34,7 +34,6 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import DisburseFunds from "./DisburseFunds";
 
 const DonorDashboard = ({ user }: any) => {
   const donationHistory = [
@@ -89,7 +88,6 @@ const DonorDashboard = ({ user }: any) => {
                 </div>
               </div>
             </div>
-            <DisburseFunds />
           </div>
         </CardContent>
       </Card>

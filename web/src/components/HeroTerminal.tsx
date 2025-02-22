@@ -4,9 +4,9 @@ import {
   AppWindow,
   Clapperboard,
   CloudLightning,
-  Coins,
-  ExternalLink,
-  FilePieChart,
+  Activity,
+  Globe,
+  LifeBuoy,
   MessageCircleMore,
 } from "lucide-react";
 import { AnimatedSpan, Terminal, TypingAnimation } from "./ui/terminal";
@@ -125,36 +125,42 @@ const HeroTerminal = () => {
           </p>
         </div>
 
-        {/* <div className="flex max-w-[370px] flex-col justify-between rounded-2xl bg-gray-200 p-6 text-black shadow-md transition-all duration-300 hover:bg-gray-100 hover:shadow-lg dark:bg-gray-800 dark:text-white dark:hover:bg-gray-900">
-          <div className="mb-4 flex items-center gap-3">
-            <FilePieChart className="h-6 w-6 text-green-500" />
-            <p className="text-lg font-semibold">Graph & Chart Generation</p>
-          </div>
-          <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-            Visualize spending patterns, revenue trends, and financial metrics
-            through automatically generated graphs and charts.
-          </p>
-        </div>
         <div className="flex max-w-[370px] flex-col justify-between rounded-2xl bg-gray-200 p-6 text-black shadow-md transition-all duration-300 hover:bg-gray-100 hover:shadow-lg dark:bg-gray-800 dark:text-white dark:hover:bg-gray-900">
           <div className="mb-4 flex items-center gap-3">
-            <Coins className="h-6 w-6 text-green-500" />
-            <p className="text-lg font-semibold">Tax Optimization</p>
+            <Activity className="h-6 w-6 text-green-500" />
+            <p className="text-lg font-semibold">
+              Real-Time Medical Assistance
+            </p>
           </div>
           <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-            Get personalized tax-saving strategies and recommendations tailored
-            to institutional finance needs.
+            Instant access to medical professionals and emergency care guidance,
+            ensuring immediate support during critical situations.
           </p>
         </div>
+
         <div className="flex max-w-[370px] flex-col justify-between rounded-2xl bg-gray-200 p-6 text-black shadow-md transition-all duration-300 hover:bg-gray-100 hover:shadow-lg dark:bg-gray-800 dark:text-white dark:hover:bg-gray-900">
           <div className="mb-4 flex items-center gap-3">
-            <MessageCircleMore className="h-6 w-6 text-green-500" />
-            <p className="text-lg font-semibold">Collaborative Reviews</p>
+            <Globe className="h-6 w-6 text-green-500" />
+            <p className="text-lg font-semibold">Disaster Tracking & Alerts</p>
           </div>
           <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-            Multiple team members can collaborate on financial documents, leave
-            comments, and discuss insights in real-time.
+            Stay updated with real-time disaster alerts and location-based
+            warnings to prepare for and respond to emergencies effectively.
           </p>
-        </div> */}
+        </div>
+
+        <div className="flex max-w-[370px] flex-col justify-between rounded-2xl bg-gray-200 p-6 text-black shadow-md transition-all duration-300 hover:bg-gray-100 hover:shadow-lg dark:bg-gray-800 dark:text-white dark:hover:bg-gray-900">
+          <div className="mb-4 flex items-center gap-3">
+            <LifeBuoy className="h-6 w-6 text-green-500" />
+            <p className="text-lg font-semibold">
+              Recovery & Relief Coordination
+            </p>
+          </div>
+          <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+            Seamless coordination of relief efforts, resource distribution, and
+            rehabilitation support for faster post-disaster recovery.
+          </p>
+        </div>
       </div>
     </div>
   );
