@@ -14,29 +14,29 @@ interface Item {
 
 let notifications = [
   {
-    name: "How to create a Finance Report?",
-    description: "Finnovate User",
+    name: "How to notify for a Rescue team?",
+    description: "Relief ResQ User",
     time: "15m ago",
     icon: "💸",
     color: "#00C9A7",
   },
   {
-    name: "How much is my Networth?",
-    description: "Finnovate User",
+    name: "How to save a life?",
+    description: "Relief ResQ User",
     time: "10m ago",
     icon: "👤",
     color: "#FFB800",
   },
   {
-    name: "Should I consider this Purchase?",
-    description: "Finnovate User",
+    name: "How to perform CPR?",
+    description: "Relief ResQ User",
     time: "5m ago",
     icon: "💬",
     color: "#FF3D71",
   },
   {
-    name: "Which Tax Slab do I fall in?",
-    description: "Finnovate User",
+    name: "Is this safe?",
+    description: "Relief ResQ User",
     time: "2m ago",
     icon: "🗞️",
     color: "#1E86FF",

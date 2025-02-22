@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Label } from "../ui/label";
 
-export default function LocationPicker() {
+export default function LocationPicker({ setData }: { setData: any }) {
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
     null,
   );
@@ -20,6 +20,11 @@ export default function LocationPicker() {
       (position) => {
         const { latitude, longitude } = position.coords;
         setLocation({ lat: latitude, lng: longitude });
+        setData((prevState: any) => ({
+          ...prevState,
+          lat: latitude,
+          lon: longitude,
+        }));
         setError(null);
       },
       (err) => {

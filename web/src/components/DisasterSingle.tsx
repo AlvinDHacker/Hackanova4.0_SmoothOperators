@@ -2,7 +2,7 @@
 import { type Location } from "~/types/map";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
-import { ChevronLeft, ExternalLink } from "lucide-react";
+import { Building2, ChevronLeft, ExternalLink, Landmark } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -97,7 +97,9 @@ const DisasterSingle: React.FC<DisasterSingleProps> = ({ location }) => {
         <CardHeader className="mx-auto w-full px-4 py-6">
           <div className="flex w-full items-center justify-between">
             <div>
-              <CardTitle className="text-2xl">{location.title}</CardTitle>
+              <div className="flex-wrap">
+                <CardTitle className="text-2xl">{location.title}</CardTitle>
+              </div>
               <CardDescription>Location</CardDescription>
             </div>
             <Button
@@ -111,10 +113,10 @@ const DisasterSingle: React.FC<DisasterSingleProps> = ({ location }) => {
         </CardHeader>
       </Card>
 
-      <div className="my-2 grid grid-cols-2 gap-3">
+      <div className="my-2 grid gap-3 sm:grid-cols-2">
         <LabelledPieChart data={piechart} />
         <AreaChartSimple data={simpleareachart} />
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid gap-3 sm:grid-cols-2">
           <Card>
             <CardHeader className="items-start pb-0">
               <CardTitle>No. of People Reached</CardTitle>
@@ -160,6 +162,17 @@ const DisasterSingle: React.FC<DisasterSingleProps> = ({ location }) => {
       </div>
 
       <Card className="p-2">
+        <CardHeader className="flex w-full justify-between">
+          <div className="flex w-full justify-between">
+            <div>
+              <CardTitle>NGO&apos;s In touch</CardTitle>
+              <CardDescription>
+                NGO&apos;s attending to the emergency
+              </CardDescription>
+            </div>
+            <Building2 className="my-auto" />
+          </div>
+        </CardHeader>
         <Table className="rounded-md">
           {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
           <TableHeader>
@@ -191,7 +204,48 @@ const DisasterSingle: React.FC<DisasterSingleProps> = ({ location }) => {
         </Table>
       </Card>
 
-      <div className="mx-auto max-w-7xl px-4 py-8">
+      <Card className="my-2 p-2">
+        <CardHeader className="flex w-full justify-between">
+          <div className="flex w-full justify-between">
+            <div>
+              <CardTitle>Current Transactions</CardTitle>
+              <CardDescription>Transactions about the disaster</CardDescription>
+            </div>
+            <Landmark className="my-auto" />
+          </div>
+        </CardHeader>
+        <Table className="rounded-md">
+          {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px]">Invoice</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Method</TableHead>
+              <TableHead className="text-right">Amount</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {invoices.map((invoice) => (
+              <TableRow key={invoice.invoice}>
+                <TableCell className="font-medium">{invoice.invoice}</TableCell>
+                <TableCell>{invoice.paymentStatus}</TableCell>
+                <TableCell>{invoice.paymentMethod}</TableCell>
+                <TableCell className="text-right">
+                  {invoice.totalAmount}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TableCell colSpan={3}>Total</TableCell>
+              <TableCell className="text-right">$2,500.00</TableCell>
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </Card>
+
+      {/* <div className="mx-auto max-w-7xl px-4 py-8">
         <div className="mb-8 rounded-lg bg-white p-6 shadow">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
@@ -208,8 +262,6 @@ const DisasterSingle: React.FC<DisasterSingleProps> = ({ location }) => {
             </div>
           </div>
         </div>
-
-        {/* Features */}
         <div className="mb-8 rounded-lg bg-white p-6 shadow">
           <h2 className="mb-4 text-xl font-semibold">Features</h2>
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -221,7 +273,7 @@ const DisasterSingle: React.FC<DisasterSingleProps> = ({ location }) => {
             ))}
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

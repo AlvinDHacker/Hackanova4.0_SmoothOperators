@@ -20,12 +20,17 @@ enum DisasterStatus {
 }
 
 enum FocusArea {
-    MEDICAL
     FOOD
-    SHELTER
-    EDUCATION
+    MEDICAL
+    TRAVEL
     INFRASTRUCTURE
     OTHER
+}
+
+enum Severity {
+    HIGH
+    MEDIUM
+    LOW
 }
 
 model User {
@@ -34,22 +39,22 @@ model User {
     email    String?  @unique
     image    String?
     userType UserType
+    phoneNo  String
     did      String?  @unique // DID is now optional
     walletId String   @unique // Wallet address is now unique and required for SIWE
+    aadhar   String?
 
     accounts Account[]
     sessions Session[]
     posts    Post[]
 
-    // Relation to NGOs (Only if userType is NGO)
-    ngo NGO?
+    NGO NGO[]
 }
 
 model NGO {
     id           String   @id @default(cuid())
     name         String
     email        String?  @unique
-    phone        String?
     locationLat  Float
     locationLong Float
     mission      String
@@ -90,8 +95,10 @@ model Disaster {
     id           String         @id @default(cuid())
     name         String
     description  String
+    link         String
     locationLat  Float
     locationLong Float
+    severity     Severity       @default(HIGH)
     status       DisasterStatus @default(ACTIVE)
     amountUsed   Float          @default(0.0)
     createdAt    DateTime       @default(now())
