@@ -37,8 +37,10 @@ import {
 import { Button } from "./ui/button";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
+import { useUser } from "./AuthComponent";
 
-const DonorDashboard = ({ user }: any) => {
+const DonorDashboard = () => {
+  const { user } = useUser();
   const donationHistory = [
     { month: "Jan", amount: 2400 },
     { month: "Feb", amount: 1398 },
@@ -64,147 +66,157 @@ const DonorDashboard = ({ user }: any) => {
     { name: "Education", value: 15 },
     { name: "Infrastructure", value: 10 },
   ];
-  
+
   const donordemofunction = () => {
-      const driverObj = driver({
-        popoverClass: 'driverjs-theme',
-        allowClose: false,
-        showProgress: true,
-        steps: [
-          {
-            element: "#donordetails",
-            popover: {
-              title: "Donor Details",
-              description: "Gives you the basic information our website has about you",
-            },
+    const driverObj = driver({
+      popoverClass: "driverjs-theme",
+      allowClose: false,
+      showProgress: true,
+      steps: [
+        {
+          element: "#donordetails",
+          popover: {
+            title: "Donor Details",
+            description:
+              "Gives you the basic information our website has about you",
           },
-          {
-            element: "#totaldonations",
-            popover: {
-              title: "Your Contributions So Far",
-              description: "View the total amount you have donated and track how your generosity is making a difference in disaster relief efforts.",
-            },
+        },
+        {
+          element: "#totaldonations",
+          popover: {
+            title: "Your Contributions So Far",
+            description:
+              "View the total amount you have donated and track how your generosity is making a difference in disaster relief efforts.",
           },
-          {
-            element: "#livesimpacted",
-            popover: {
-              title: "People You Have Helped",
-              description: " See the number of lives directly impacted by your donations, ensuring aid reaches those who need it the most.",
-            },
-          },{
-            element: "#activedisasters",
-            popover: {
-              title: "Ongoing Relief Efforts",
-              description: "Track current disasters where relief efforts are in progress and see where your donations are making an impact.",
-            },
+        },
+        {
+          element: "#livesimpacted",
+          popover: {
+            title: "People You Have Helped",
+            description:
+              " See the number of lives directly impacted by your donations, ensuring aid reaches those who need it the most.",
           },
-          {
-            element: "#ngossupported",
-            popover: {
-              title: "Your Partnered NGOs",
-              description: "View the verified NGOs you have supported, ensuring transparency and accountability in fund utilization.",
-            },
+        },
+        {
+          element: "#activedisasters",
+          popover: {
+            title: "Ongoing Relief Efforts",
+            description:
+              "Track current disasters where relief efforts are in progress and see where your donations are making an impact.",
           },
-        ],
-      });
-  
-      // Start the tour
-      driverObj.drive();
-    }
+        },
+        {
+          element: "#ngossupported",
+          popover: {
+            title: "Your Partnered NGOs",
+            description:
+              "View the verified NGOs you’ve supported, ensuring transparency and accountability in fund utilization.",
+          },
+        },
+      ],
+    });
+
+    // Start the tour
+    driverObj.drive();
+  };
   return (
     <div className="flex min-h-screen w-full flex-col gap-4 p-8">
-      <div id = "donordetails">
+      <div id="donordetails">
         <Card className="">
-        <CardContent className="p-6">
-          <div className="flex justify-between gap-3">
-            <div className="flex items-center gap-6">
-              <div className="h-20 w-20 rounded-full bg-white/20 p-4">
-                <User2 className="h-12 w-12" />
-              </div>
-              <div className="flex-1">
-                <h1 className="text-3xl font-bold">
-                  {user?.name || "NGO Name"}
-                </h1>
-                <p className="">{user?.email || "xyz@gmail.com"}</p>
-                <div className="mt-2 flex flex-col gap-1 sm:flex-row sm:gap-4">
-                  <span className="flex items-center gap-1">
-                    <Phone className="h-4 w-4" />
-                    {user?.phone || "website.org"}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Map className="h-4 w-4" />
-                    {`${user?.location}`}
-                  </span>
+          <CardContent className="p-6">
+            <div className="flex justify-between gap-3">
+              <div className="flex items-center gap-6">
+                <div className="h-20 w-20 rounded-full bg-white/20 p-4">
+                  <User2 className="h-12 w-12" />
+                </div>
+                <div className="flex-1">
+                  <h1 className="text-3xl font-bold">
+                    {user?.name || "NGO Name"}
+                  </h1>
+                  <p className="">{user?.email || "xyz@gmail.com"}</p>
+                  <div className="mt-2 flex flex-col gap-1 sm:flex-row sm:gap-4">
+                    <span className="flex items-center gap-1">
+                      <Phone className="h-4 w-4" />
+                      {user?.phoneNo || "website.org"}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Map className="h-4 w-4" />
+                      {`${user?.walletId}`}
+                    </span>
+                  </div>
                 </div>
               </div>
+              <Button variant={"outline"} onClick={donordemofunction}>
+                Show Demo
+              </Button>
             </div>
-            <Button variant={"outline"} onClick={donordemofunction}>Show Demo</Button>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <div id ="totaldonations">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total Donations
-            </CardTitle>
-            <Heart className="h-4 w-4 text-rose-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">$45,231.89</div>
-            <p className="text-xs text-muted-foreground">
-              +20.1% from last month
-            </p>
-          </CardContent>
-        </Card>
+        <div id="totaldonations">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">
+                Total Donations
+              </CardTitle>
+              <Heart className="h-4 w-4 text-rose-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">$45,231.89</div>
+              <p className="text-xs text-muted-foreground">
+                +20.1% from last month
+              </p>
+            </CardContent>
+          </Card>
         </div>
-        <div id = "livesimpacted">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">
-              Lives Impacted
-            </CardTitle>
-            <Users className="h-4 w-4 text-blue-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">2,350</div>
-            <p className="text-xs text-muted-foreground">Across 15 disasters</p>
-          </CardContent>
-        </Card>
-        </div> 
-        <div id ="activedisasters">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">
-              Active Disasters
-            </CardTitle>
-            <AlertCircle className="h-4 w-4 text-yellow-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">12</div>
-            <p className="text-xs text-muted-foreground">
-              In 8 different regions
-            </p>
-          </CardContent>
-        </Card>
+        <div id="livesimpacted">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">
+                Lives Impacted
+              </CardTitle>
+              <Users className="h-4 w-4 text-blue-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">2,350</div>
+              <p className="text-xs text-muted-foreground">
+                Across 15 disasters
+              </p>
+            </CardContent>
+          </Card>
         </div>
-        <div id ="ngossupported">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">
-              NGOs Supported
-            </CardTitle>
-            <Building2 className="h-4 w-4 text-green-600 dark:text-green-700" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">24</div>
-            <p className="text-xs text-muted-foreground">
-              Across 5 focus areas
-            </p>
-          </CardContent>
-        </Card>
+        <div id="activedisasters">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">
+                Active Disasters
+              </CardTitle>
+              <AlertCircle className="h-4 w-4 text-yellow-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">12</div>
+              <p className="text-xs text-muted-foreground">
+                In 8 different regions
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+        <div id="ngossupported">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">
+                NGOs Supported
+              </CardTitle>
+              <Building2 className="h-4 w-4 text-green-600 dark:text-green-700" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">24</div>
+              <p className="text-xs text-muted-foreground">
+                Across 5 focus areas
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
