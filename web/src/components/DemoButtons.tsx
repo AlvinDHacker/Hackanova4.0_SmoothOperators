@@ -1,5 +1,5 @@
 // components/DemoButtons.jsx
-"use client";
+'use client';
 
 import React, { useEffect } from "react";
 import { Button } from "~/components/ui/button";
@@ -9,18 +9,11 @@ import "driver.js/dist/driver.css";
 import DisburseFunds from "./DisburseFunds";
 
 const DemoButtons = () => {
-  useEffect(() => {
-    // Initialize driver.js after component mounts
+  const showdemofunction = () => {
     const driverObj = driver({
+      popoverClass: 'driverjs-theme',
       showProgress: true,
       steps: [
-        {
-          element: "#showdemo",
-          popover: {
-            title: "Take A Demo With Us",
-            description: "a detailed explanation on how to use Relief ResQ",
-          },
-        },
         {
           element: "#login",
           popover: {
@@ -28,19 +21,45 @@ const DemoButtons = () => {
             description: "Login as per usertype to Relief ResQ",
           },
         },
+        {
+          element: "#donorlogin",
+          popover: {
+            title: "Donor Portal",
+            description: "Donate funds securely, track your contributions, and ensure aid reaches the right people in real-time.",
+          },
+        },
+        {
+          element: "#vendorlogin",
+          popover: {
+            title: "Vendor Portal",
+            description: "Manage relief supply orders, track deliveries, and receive instant payments for aid distribution.",
+          },
+        },{
+          element: "#NGOlogin",
+          popover: {
+            title: "NGO Portal",
+            description: "Request funds, coordinate disaster relief efforts, and track aid distribution efficiently.",
+          },
+        },
+
       ],
     });
 
     // Start the tour
     driverObj.drive();
+  }
+  
+  useEffect(() => {
+    // Initialize driver.js after component mounts
+    
   }, []);
 
   return (
     <div className="flex items-center gap-4">
-      <div id="login">
-        <MainLogin />
+      <div id = "login">
+      <MainLogin />
       </div>
-      <Button id="showdemo" variant="outline">
+      <Button id="showdemo" variant="outline" onClick={showdemofunction}>
         Show Demo
       </Button>
       <DisburseFunds />
