@@ -11,47 +11,41 @@ import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import DemoButtons from "~/components/DemoButtons";
 import { EvervaultCard, Icon } from "~/components/ui/evervault-card";
+import { ConfettiButton } from "~/components/ui/confetti";
+import Testimonials from "~/components/Testimonials";
+import CTA from "~/components/CTA";
+import Footer from "~/components/Footer";
 
 const slugs = [
-  "paypal",
-  "visa",
-  "mastercard",
-  "stripe",
-  "americanexpress",
-  "chase",
-  "citibank",
-  "hdfcbank",
-  "monero",
-  "amex",
-  "barclays",
-  "allianz",
-  "metlife",
-  "prudential",
-  "phonepe",
-  "fineco",
-  "interactjs",
-  "instapaper",
-  "robinhood",
-  "etrade",
-  "wealthfront",
-  "betterment",
-  "sofi",
-  "stash",
-  "acorns",
-  "mint",
-  "plaid",
-  "affirm",
-  "klarna",
-  "afterpay",
-  "zelle",
-  "venmo",
-  "cashapp",
-  "alipay",
-  "wechatpay",
-  "googlepay",
-  "applepay",
-  "samsungpay",
-  "revolut",
+  // Blockchain & Crypto
+  "solana",
+  "ethereum",
+  "bitcoin",
+  "rust",
+  "walletconnect",
+  "blockchaindotcom",
+  "tether",
+  "bnbchain",
+  "web3dotjs",
+  "ethers",
+  "dogecoin",
+  "litecoin",
+  "solidity",
+  "polygon",
+  "near",
+  "stellar",
+  "polkadot",
+  "xrp",
+  "sui",
+
+  // Web3 & DeFi
+  "web3",
+  "opensea",
+  "uniswap",
+  "chainlink",
+  "coinbase",
+  "binance",
+  "coinmarketcap",
 ];
 
 const images = slugs.map(
@@ -179,6 +173,7 @@ export default async function Home() {
                   Not just this we even have top notch security
                 </p>
               </div>
+              <ConfettiButton>Explore 🎉</ConfettiButton>
             </div>
             <div className="relative flex size-full items-center justify-center overflow-hidden">
               <IconCloud images={images} />
@@ -241,6 +236,9 @@ export default async function Home() {
           </div>
         </section>
       </>
+      <Testimonials />
+      <CTA />
+      <Footer />
     </div>
   );
 }
