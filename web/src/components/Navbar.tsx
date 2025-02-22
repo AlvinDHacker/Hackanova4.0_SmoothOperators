@@ -7,7 +7,15 @@ import Image from "next/image";
 import Link from "next/link";
 // import { OrganizationSwitcher } from "@clerk/nextjs";
 // import { Authenticated } from "convex/react";
-import { Loader2, Search, ShieldCheck } from "lucide-react";
+import {
+  Earth,
+  Home,
+  Loader2,
+  Map,
+  Search,
+  ShieldCheck,
+  User2,
+} from "lucide-react";
 import { BarChart2, ClipboardPen, Files, Globe } from "lucide-react";
 import { cn } from "~/lib/utils";
 import { usePathname } from "next/navigation";
@@ -48,15 +56,15 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      <div className="fixed bottom-0 w-full">
+      <div className="fixed bottom-0 z-10 w-full">
         <div className="mx-auto flex w-[80%] justify-center sm:hidden">
           <Docks
             className="shadow-second z-10 rounded-t-xl bg-white shadow-md dark:bg-black"
             direction="middle"
           >
             <DockIcon>
-              <Link href={"/dashboard/search"}>
-                <Search
+              <Link href={"/"}>
+                <Home
                   className={cn("text-second size-6", {
                     "text-green-600": pathname.endsWith("/search"),
                   })}
@@ -64,8 +72,8 @@ const Navbar = () => {
               </Link>
             </DockIcon>
             <DockIcon>
-              <Link href={"/dashboard/documents"}>
-                <Files
+              <Link href={"/emergencies"}>
+                <Earth
                   className={cn("text-second size-6", {
                     "text-green-600": pathname.endsWith("/documents"),
                   })}
@@ -73,8 +81,8 @@ const Navbar = () => {
               </Link>
             </DockIcon>
             <DockIcon>
-              <Link href={"/dashboard/finnosearch"}>
-                <Globe
+              <Link href={"/emergencies/map"}>
+                <Map
                   className={cn("text-second size-6", {
                     "text-green-600": pathname.endsWith("/finnosearch"),
                   })}
@@ -82,7 +90,7 @@ const Navbar = () => {
               </Link>
             </DockIcon>
             <DockIcon>
-              <Link href={"/dashboard/notes"}>
+              <Link href={"/emergencies/notes"}>
                 <ClipboardPen
                   className={cn("text-second size-6", {
                     "text-green-600": pathname.endsWith("/notes"),
@@ -91,10 +99,10 @@ const Navbar = () => {
               </Link>
             </DockIcon>
             <DockIcon>
-              <Link href={"/dashboard/analytics"}>
-                <BarChart2
+              <Link href={"/emergencies/profile"}>
+                <User2
                   className={cn("text-second size-6", {
-                    "text-green-600": pathname.endsWith("/analytics"),
+                    "text-green-600": pathname.endsWith("/profile"),
                   })}
                 />
               </Link>

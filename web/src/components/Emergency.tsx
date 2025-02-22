@@ -1,8 +1,8 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { ExternalLink, Filter, ChevronRight, Search } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { ExternalLink, Filter, ChevronRight, Search, Eye } from "lucide-react";
 import Link from "next/link";
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
@@ -21,33 +21,50 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Input } from "~/components/ui/input";
+import { Separator } from "./ui/separator";
+import DonorPay from "./DonorPay";
 
-const API_BASE_URL = 'http://127.0.0.1:5000';
+const API_BASE_URL = "http://127.0.0.1:5000";
 
 const EmergencyCard = ({ article }: any) => (
-  <Card className="h-full">
+  <Card className="flex h-full flex-col justify-between">
     <CardHeader>
       <div className="flex justify-between">
+        {/* <div className="flex"> */}
         <div>
-          <CardTitle className="text-lg">{article.title.split(' - ')[0]}</CardTitle>
-          <CardDescription className="mt-1">
-            {new Date(article.published).toLocaleDateString()}
+          <CardTitle className="mb-1 text-lg">
+            {article.title.split(" - ")[0]}
+          </CardTitle>
+          <Separator />
+          <CardDescription className="mt-2">
+            <div className="flex justify-between">
+              {new Date(article.published).toLocaleDateString()}
+              <Badge
+                variant={
+                  article.severity === "high"
+                    ? "destructive"
+                    : article.severity === "medium"
+                      ? "secondary"
+                      : "default"
+                }
+                className="my-auto"
+              >
+                {article.severity.toUpperCase()}
+              </Badge>
+            </div>
           </CardDescription>
         </div>
-        <Badge 
-          variant={article.severity === "high" ? "destructive" : 
-                 article.severity === "medium" ? "secondary" : "default"}
-          className="my-auto"
-        >
-          {article.severity.toUpperCase()}
-        </Badge>
+        {/* </div> */}
       </div>
     </CardHeader>
     <CardContent className="pb-2">
-      <div className="mb-4" dangerouslySetInnerHTML={{ 
-        __html: article.description.split('&nbsp;')[0] 
-      }} />
-      <div className="flex items-center gap-2">
+      <div
+        className="mb-4"
+        dangerouslySetInnerHTML={{
+          __html: article.description.split("&nbsp;")[0],
+        }}
+      />
+      <div className="mb-2 flex items-center gap-2">
         <Badge variant="outline" className="capitalize">
           {article.emergencyType}
         </Badge>
@@ -56,11 +73,21 @@ const EmergencyCard = ({ article }: any) => (
         </span>
       </div>
     </CardContent>
-    <CardFooter className="border-t pt-6">
-      <div className="flex w-full justify-end">
+    <CardFooter className="border-t pt-4">
+      <div className="flex w-full justify-end gap-3">
         <a href={article.link} target="_blank" rel="noopener noreferrer">
-          <Button className='dark:bg-green-700 bg-green-600 text-white hover:text-black' size="sm">
-            Read More <ExternalLink className="ml-2 h-4 w-4" />
+          <Button variant={"outline"} className="">
+            View Report
+          </Button>
+        </a>
+        <DonorPay />
+        <a
+          href={`/emergencies/map/${article.id}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Button className="bg-green-600 text-white hover:bg-green-500 dark:bg-green-700">
+            <ExternalLink />
           </Button>
         </a>
       </div>
@@ -76,7 +103,7 @@ const Emergency = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const fetchArticles = async (endpoint = '/emergency-news') => {
+  const fetchArticles = async (endpoint = "/emergency-news") => {
     try {
       setLoading(true);
       const response = await fetch(`${API_BASE_URL}${endpoint}`);
@@ -84,7 +111,7 @@ const Emergency = () => {
       setArticles(data.articles || []);
       setError(null);
     } catch (err) {
-      setError('Failed to fetch emergency news');
+      setError("Failed to fetch emergency news");
       setArticles([]);
     } finally {
       setLoading(false);
@@ -131,7 +158,9 @@ const Emergency = () => {
     <div className="mx-auto max-w-7xl px-4 py-8">
       <div className="mb-8">
         <h1 className="mb-2 text-3xl font-bold">Emergency Relief Center</h1>
-        <p className="text-muted-foreground">Latest updates on emergencies and disasters worldwide</p>
+        <p className="text-muted-foreground">
+          Latest updates on emergencies and disasters worldwide
+        </p>
       </div>
 
       <div className="mb-6 flex flex-wrap items-center gap-4">
