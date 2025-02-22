@@ -4,11 +4,14 @@ export interface Location {
     position: [number, number];
     title: string;
     description: string;
-    address: string;
-    rating: number;
-    openingHours: string;
-    features: string[];
-    reviews: Review[];
+    // address: string;
+    // rating: number;
+    link: string,
+    severity: string,
+      status: string,
+    // openingHours: string;
+    // features: string[];
+    // reviews: Review[];
   }
   
   export interface Review {

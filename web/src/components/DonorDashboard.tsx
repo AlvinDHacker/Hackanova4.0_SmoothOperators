@@ -35,6 +35,8 @@ import {
   YAxis,
 } from "recharts";
 import { Button } from "./ui/button";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 
 const DonorDashboard = ({ user }: any) => {
   const donationHistory = [
@@ -62,10 +64,57 @@ const DonorDashboard = ({ user }: any) => {
     { name: "Education", value: 15 },
     { name: "Infrastructure", value: 10 },
   ];
-
+  
+  const donordemofunction = () => {
+      const driverObj = driver({
+        popoverClass: 'driverjs-theme',
+        allowClose: false,
+        showProgress: true,
+        steps: [
+          {
+            element: "#donordetails",
+            popover: {
+              title: "Donor Details",
+              description: "Gives you the basic information our website has about you",
+            },
+          },
+          {
+            element: "#totaldonations",
+            popover: {
+              title: "Your Contributions So Far",
+              description: "View the total amount you have donated and track how your generosity is making a difference in disaster relief efforts.",
+            },
+          },
+          {
+            element: "#livesimpacted",
+            popover: {
+              title: "People You Have Helped",
+              description: " See the number of lives directly impacted by your donations, ensuring aid reaches those who need it the most.",
+            },
+          },{
+            element: "#activedisasters",
+            popover: {
+              title: "Ongoing Relief Efforts",
+              description: "Track current disasters where relief efforts are in progress and see where your donations are making an impact.",
+            },
+          },
+          {
+            element: "#ngossupported",
+            popover: {
+              title: "Your Partnered NGOs",
+              description: "View the verified NGOs you’ve supported, ensuring transparency and accountability in fund utilization.",
+            },
+          },
+        ],
+      });
+  
+      // Start the tour
+      driverObj.drive();
+    }
   return (
     <div className="flex min-h-screen w-full flex-col gap-4 p-8">
-      <Card className="">
+      <div id = "donordetails">
+        <Card className="">
         <CardContent className="p-6">
           <div className="flex justify-between gap-3">
             <div className="flex items-center gap-6">
@@ -89,11 +138,13 @@ const DonorDashboard = ({ user }: any) => {
                 </div>
               </div>
             </div>
-            <Button variant={"outline"}>Show Demo</Button>
+            <Button variant={"outline"} onClick={donordemofunction}>Show Demo</Button>
           </div>
         </CardContent>
       </Card>
+      </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div id ="totaldonations">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">
@@ -108,6 +159,8 @@ const DonorDashboard = ({ user }: any) => {
             </p>
           </CardContent>
         </Card>
+        </div>
+        <div id = "livesimpacted">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">
@@ -120,6 +173,8 @@ const DonorDashboard = ({ user }: any) => {
             <p className="text-xs text-muted-foreground">Across 15 disasters</p>
           </CardContent>
         </Card>
+        </div> 
+        <div id ="activedisasters">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">
@@ -134,6 +189,8 @@ const DonorDashboard = ({ user }: any) => {
             </p>
           </CardContent>
         </Card>
+        </div>
+        <div id ="ngossupported">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">
@@ -148,6 +205,7 @@ const DonorDashboard = ({ user }: any) => {
             </p>
           </CardContent>
         </Card>
+        </div>
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         <Card className="col-span-4">

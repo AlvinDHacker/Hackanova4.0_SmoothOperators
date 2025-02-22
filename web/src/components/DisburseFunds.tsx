@@ -67,16 +67,17 @@ const DisburseFunds = () => {
     ) as unknown as ResQ;
 
     try {
-      // const tx = await contractInstance.disburseFunds(
-      //   user?.walletId!,
-      //   BigInt(parseFloat(convertedAmount) * 10 ** 18), // If you need it as a BigInt
-      // );
-      if (user?.walletId) {
-        console.log(user.walletId);
-        const tx = await contractInstance.getDonorDetails(user?.walletId);
-        console.log(tx);
-      }
-      // await tx.wait(); // Wait for the transaction to be confirmed
+      const tx = await contractInstance.disburseFunds(
+        user?.walletId!,
+        BigInt(parseFloat(convertedAmount) * 10 ** 18), // If you need it as a BigInt
+      );
+      // if (user?.walletId) {
+      //   console.log(user.walletId);
+      //   const tx = await contractInstance.getBeneficiaryDetails(user?.walletId);
+      //   console.log(tx);
+      // }
+      await tx.wait(); // Wait for the transaction to be confirmed
+      console.log(tx);
       console.log("Payment successful!");
     } catch (error) {
       console.error("Error depositing funds:", error);

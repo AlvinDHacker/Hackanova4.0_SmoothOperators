@@ -52,10 +52,10 @@ export default function DashboardPage() {
     <div className="container mx-auto block sm:flex sm:gap-24">
       <SideNav />
       <div className="w-full">
-        {user?.userType != "NGO" ? (
+        {user?.userType == "NGO" ? (
           <NgoDashboard
             ngo={{
-              name: user.name,
+              name: user?.name,
               mission: info?.mission,
               website: info?.website,
               locationLat: info?.locationLat,
