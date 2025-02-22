@@ -96,7 +96,7 @@ const NgoLogin = () => {
       ) as unknown as ResQ;
 
       if (signer) {
-        contractInstance.registerDonor(
+        contractInstance.registerBeneficiary(
           signer.address,
           `did:ethr:${signer.address}`,
           data.ngoId,
