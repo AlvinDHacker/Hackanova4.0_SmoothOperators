@@ -92,22 +92,27 @@ model NGOOnDisaster {
 }
 
 model Disaster {
-    id           String         @id @default(cuid())
-    name         String
-    description  String
-    link         String?
-    locationLat  Float
-    locationLong Float
-    severity     Severity       @default(HIGH)
-    status       DisasterStatus @default(ACTIVE)
-    amountUsed   Float          @default(0.0)
-    createdAt    DateTime       @default(now())
-    updatedAt    DateTime       @updatedAt
+    id             String         @id @default(cuid())
+    title          String
+    name           String
+    description    String
+    source         String
+    link           String
+    locationLat    Float
+    locationLong   Float
+    severity       Severity       @default(HIGH)
+    status         DisasterStatus @default(ACTIVE)
+    amountUsed     Float          @default(0.0)
+    published      DateTime
+    emergencyType  String
+    createdAt      DateTime       @default(now())
+    updatedAt      DateTime       @updatedAt
 
-    // Many-to-Many with NGOs
-    ngoDisasters NGOOnDisaster[]
+    ngoDisasters   NGOOnDisaster[]
 
     @@index([name])
+    @@index([emergencyType])
+    @@index([published])
 }
 
 model Post {

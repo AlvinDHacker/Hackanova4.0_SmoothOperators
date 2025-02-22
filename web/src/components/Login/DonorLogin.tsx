@@ -25,13 +25,8 @@ import { SiweMessage, generateNonce } from "siwe";
 import { BrowserProvider, Contract, JsonRpcSigner } from "ethers";
 import contractAbi from "../../../contract/ResQ.json";
 import { checkUser } from "~/app/api/manageUser";
-
-interface FormData {
-  name: string;
-  phoneNo: string;
-  aadhar: string;
-  userType: string;
-}
+import type { ResQ } from "typechain-types/ResQ";
+import type { JsonRpcSigner } from "ethers";
 
 const DonorLogin = () => {
   const [next, setNext] = useState(false);
@@ -45,7 +40,7 @@ const DonorLogin = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [signature, setSignature] = useState("");
-  const [signer, setSigner] = useState<JsonRpcSigner | undefined>();
+  const [signer, setSigner] = useState<JsonRpcSigner>();
   const [isOpen, setIsOpen] = useState(false);
 
   const openDialog = () => setIsOpen(true);
@@ -66,28 +61,19 @@ const DonorLogin = () => {
         throw new Error("Contract address is missing in .env");
       }
 
-      // Replace the contract interaction code in handleSignUp:
-      if (!signer) {
-        throw new Error("Signer not initialized");
-      }
-
-      const contractInstance = new Contract(
+      const contractInstance: ResQ = new Contract(
         contractAddress,
         contractAbi.abi,
         signer,
-      ) as Contract & {
-        registerDonor(
-          address: string,
-          did: string,
-          aadhar: string,
-        ): Promise<any>;
-      };
+      ) as unknown as ResQ;
 
-      await contractInstance?.registerDonor(
-        await signer.getAddress(),
-        `did:ethr:${await signer.getAddress()}`,
-        data.aadhar,
-      );
+      if (signer) {
+        contractInstance.registerDonor(
+          signer.address,
+          `did:ethr:${signer.address}`,
+          data.aadhar,
+        );
+      }
     } catch (err) {
       console.error("Login failed:", err);
     } finally {

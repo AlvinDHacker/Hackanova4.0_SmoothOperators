@@ -20,10 +20,12 @@ import { Separator } from "../ui/separator";
 import { Checkbox } from "~/components/ui/checkbox";
 import LocationPicker from "./LocationPicker";
 import { BrowserProvider, Signer, Contract } from "ethers";
+import type { JsonRpcSigner } from "ethers";
 import { SiweMessage, generateNonce } from "siwe";
 import contractAbi from "../../../contract/ResQ.json";
 import { signIn } from "next-auth/react";
 import { checkUser } from "~/app/api/manageUser";
+import type { ResQ } from "typechain-types/ResQ";
 
 const NgoLogin = () => {
   const [next, setNext] = useState(0);
@@ -56,7 +58,7 @@ const NgoLogin = () => {
   });
   const [message, setMessage] = useState("");
   const [signature, setSignature] = useState("");
-  const [signer, setSigner] = useState();
+  const [signer, setSigner] = useState<JsonRpcSigner>();
   const [isOpen, setIsOpen] = useState(false);
 
   const openDialog = () => setIsOpen(true);
@@ -87,17 +89,19 @@ const NgoLogin = () => {
         throw new Error("Contract address is missing in .env");
       }
 
-      const contractInstance = new Contract(
+      const contractInstance: ResQ = new Contract(
         contractAddress,
         contractAbi.abi,
         signer,
-      );
+      ) as unknown as ResQ;
 
-      contractInstance.registerBeneficiary(
-        signer.address,
-        `did:ethr:${signer.address}`,
-        data.ngoId,
-      );
+      if (signer) {
+        contractInstance.registerDonor(
+          signer.address,
+          `did:ethr:${signer.address}`,
+          data.ngoId,
+        );
+      }
     } catch (e) {
       console.log(e);
     }
