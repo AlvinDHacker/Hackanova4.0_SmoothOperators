@@ -41,6 +41,10 @@ const DonorLogin = () => {
   const [message, setMessage] = useState("");
   const [signature, setSignature] = useState("");
   const [signer, setSigner] = useState();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openDialog = () => setIsOpen(true);
+  const closeDialog = () => setIsOpen(false);
 
   const handleSignUp = async () => {
     try {
@@ -84,7 +88,7 @@ const DonorLogin = () => {
       const tsigner = await provider.getSigner();
       const address = await tsigner.getAddress();
 
-      const userExists = await checkUser(signer.address);
+      const userExists = await checkUser(tsigner.address);
       const message = new SiweMessage({
         domain: window.location.host,
         address,
@@ -108,6 +112,7 @@ const DonorLogin = () => {
         setMessage(JSON.stringify(message));
         setSignature(signature);
         setSigner(tsigner);
+        openDialog();
       }
     } catch (e) {
       console.log(e);
@@ -116,10 +121,13 @@ const DonorLogin = () => {
 
   return (
     <div>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="outline">Login as Donor</Button>
-        </DialogTrigger>
+      <Button onClick={handleLogin} variant="outline">
+        Login as Donor
+      </Button>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        {/* <DialogTrigger asChild>
+          
+        </DialogTrigger> */}
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Login as a Donor</DialogTitle>
@@ -244,7 +252,11 @@ const DonorLogin = () => {
                       <ChevronLeft />
                       Back
                     </Button>
-                    <Button variant={"outline"} type="submit">
+                    <Button
+                      onClick={handleSignUp}
+                      variant={"outline"}
+                      type="submit"
+                    >
                       <img src={img} height={15} width={15} alt="Hi" />
                       Login with Ethereum
                     </Button>

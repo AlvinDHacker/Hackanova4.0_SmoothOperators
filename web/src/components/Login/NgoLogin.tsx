@@ -23,6 +23,7 @@ import { BrowserProvider, Signer, Contract } from "ethers";
 import { SiweMessage, generateNonce } from "siwe";
 import contractAbi from "../../../contract/ResQ.json";
 import { signIn } from "next-auth/react";
+import { checkUser } from "~/app/api/manageUser";
 
 const NgoLogin = () => {
   const [next, setNext] = useState(0);
@@ -53,6 +54,13 @@ const NgoLogin = () => {
     lon: 0.0,
     userType: "NGO",
   });
+  const [message, setMessage] = useState("");
+  const [signature, setSignature] = useState("");
+  const [signer, setSigner] = useState();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openDialog = () => setIsOpen(true);
+  const closeDialog = () => setIsOpen(false);
 
   const handleCheckboxChange = (area: number, checked: boolean) => {
     setData((prev) => ({
@@ -63,26 +71,8 @@ const NgoLogin = () => {
     }));
   };
 
-  const handleLogin = async () => {
-    if (!window.ethereum) return alert("MetaMask required");
-
-    setLoading(true);
+  const handleSignup = async () => {
     try {
-      const provider = new BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const address = await signer.getAddress();
-
-      const message = new SiweMessage({
-        domain: window.location.host,
-        address,
-        statement: "Sign in with Ethereum",
-        uri: window.location.origin,
-        version: "1",
-        chainId: 1,
-        nonce: generateNonce(),
-      });
-
-      const signature = await signer.signMessage(message.prepareMessage());
       await signIn("credentials", {
         message: JSON.stringify(message),
         signature,
@@ -108,6 +98,47 @@ const NgoLogin = () => {
         `did:ethr:${signer.address}`,
         data.ngoId,
       );
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleLogin = async () => {
+    if (!window.ethereum) return alert("MetaMask required");
+
+    try {
+      const provider = new BrowserProvider(window.ethereum);
+      const tsigner = await provider.getSigner();
+      const address = await tsigner.getAddress();
+
+      const userExists = await checkUser(tsigner.address);
+
+      const message = new SiweMessage({
+        domain: window.location.host,
+        address,
+        statement: "Sign in with Ethereum",
+        uri: window.location.origin,
+        version: "1",
+        chainId: 1,
+        nonce: generateNonce(),
+      });
+
+      const signature = await tsigner.signMessage(message.prepareMessage());
+
+      if (userExists) {
+        await signIn("credentials", {
+          message: JSON.stringify(message),
+          signature,
+          redirect: false,
+          ...data,
+          focusArea: JSON.stringify(data.focusArea),
+        });
+      } else {
+        setMessage(JSON.stringify(message));
+        setSignature(signature);
+        setSigner(tsigner);
+        openDialog();
+      }
     } catch (err) {
       console.error("Login failed:", err);
     } finally {
@@ -117,10 +148,10 @@ const NgoLogin = () => {
 
   return (
     <div>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="outline">Login as an NGO</Button>
-        </DialogTrigger>
+      <Button onClick={handleLogin} variant="outline">
+        Login as an NGO
+      </Button>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <div className="mx-auto w-full max-w-sm">
             <AnimatePresence mode="wait">
@@ -363,7 +394,7 @@ const NgoLogin = () => {
                         Back
                       </Button>
                       <Button
-                        onClick={handleLogin}
+                        onClick={handleSignup}
                         disabled={
                           data.mission == "" ||
                           data.vision == "" ||
