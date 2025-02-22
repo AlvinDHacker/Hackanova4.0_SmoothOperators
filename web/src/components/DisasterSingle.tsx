@@ -22,9 +22,22 @@ import {
 import { LabelledPieChart } from "./Charts/LabelledPieChart";
 import { NumberTicker } from "./ui/number-ticker";
 import { AreaChartSimple } from "./Charts/AreaChart";
-import { Disaster } from "@prisma/client";
+import { Disaster, NGO } from "@prisma/client";
+import Link from "next/link";
+import { Badge } from "./ui/badge";
+import { getNGOs } from "~/app/api/getNGOs";
+import { useEffect, useState } from "react";
 
 const DisasterSingle = ({ location }: { location: Disaster }) => {
+  const [ngos, setNgos] = useState<NGO[]>([]);
+
+  useEffect(() => {
+    const fetchNGOs = async () => {
+      const n = await getNGOs();
+      setNgos(n);
+    };
+    fetchNGOs();
+  }, []);
   const router = useRouter();
 
   const simpleareachart = [
@@ -88,15 +101,15 @@ const DisasterSingle = ({ location }: { location: Disaster }) => {
   ];
 
   return (
-    <div className="min-h-screen w-full">
+    <div className="mx-auto min-h-screen w-[90%]">
       <Card>
         <CardHeader className="mx-auto w-full px-4 py-6">
-          <div className="flex w-full items-center justify-between">
+          <div className="flex w-full flex-col items-center justify-between gap-4 sm:flex-row">
             <div>
               <div className="flex-wrap">
                 <CardTitle className="text-2xl">{location.title}</CardTitle>
               </div>
-              <CardDescription>Location</CardDescription>
+              <CardDescription>{location.source}</CardDescription>
             </div>
             <Button
               onClick={() => void router.push("/map")}
@@ -132,7 +145,7 @@ const DisasterSingle = ({ location }: { location: Disaster }) => {
             </CardHeader>
             <CardContent>
               <NumberTicker
-                value={3}
+                value={20}
                 className="whitespace-pre-wrap text-8xl font-medium tracking-tighter text-black dark:text-white"
               />
             </CardContent>
@@ -143,16 +156,19 @@ const DisasterSingle = ({ location }: { location: Disaster }) => {
             <div className="flex w-full justify-between">
               <div>
                 <CardTitle>News Content</CardTitle>
-                <CardDescription>About the disaster</CardDescription>
+                <CardDescription>About the Emergency</CardDescription>
               </div>
-              <ExternalLink className="my-auto" />
+              <Link href={location.link}>
+                <ExternalLink className="my-auto" />
+              </Link>
             </div>
           </CardHeader>
-          <CardContent>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa
-            placeat porro est sequi. Blanditiis perferendis voluptates labore
-            exercitationem explicabo, accusantium ipsum tempora quisquam debitis
-            amet voluptatem ad distinctio beatae adipisci.
+          <CardContent className="px-6">
+            <div className="mb-2 flex flex-wrap gap-2">
+              <Badge>{location.severity}</Badge>
+              <Badge variant={"outline"}>{location.source}</Badge>
+            </div>
+            {location.name}
           </CardContent>
         </Card>
       </div>
@@ -169,35 +185,39 @@ const DisasterSingle = ({ location }: { location: Disaster }) => {
             <Building2 className="my-auto" />
           </div>
         </CardHeader>
-        <Table className="rounded-md">
-          {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">Invoice</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Method</TableHead>
-              <TableHead className="text-right">Amount</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {invoices.map((invoice) => (
-              <TableRow key={invoice.invoice}>
-                <TableCell className="font-medium">{invoice.invoice}</TableCell>
-                <TableCell>{invoice.paymentStatus}</TableCell>
-                <TableCell>{invoice.paymentMethod}</TableCell>
+        <CardContent>
+          <Table className="rounded-md">
+            {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[100px]">NGO Name</TableHead>
+                <TableHead>Id</TableHead>
+                <TableHead>Link</TableHead>
+                <TableHead className="text-right">Amount</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {ngos.map((invoice, i) => (
+                <TableRow key={i}>
+                  <TableCell className="w-[200px] font-medium">
+                    {invoice.name}
+                  </TableCell>
+                  <TableCell>{invoice.id}</TableCell>
+                  <TableCell>{invoice.website}</TableCell>
+                  <TableCell className="text-right">100</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TableCell colSpan={3}>Total</TableCell>
                 <TableCell className="text-right">
-                  {invoice.totalAmount}
+                  {ngos.length * 100}
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TableCell colSpan={3}>Total</TableCell>
-              <TableCell className="text-right">$2,500.00</TableCell>
-            </TableRow>
-          </TableFooter>
-        </Table>
+            </TableFooter>
+          </Table>
+        </CardContent>
       </Card>
 
       <Card className="my-2 p-2">
@@ -210,35 +230,39 @@ const DisasterSingle = ({ location }: { location: Disaster }) => {
             <Landmark className="my-auto" />
           </div>
         </CardHeader>
-        <Table className="rounded-md">
-          {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">Invoice</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Method</TableHead>
-              <TableHead className="text-right">Amount</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {invoices.map((invoice) => (
-              <TableRow key={invoice.invoice}>
-                <TableCell className="font-medium">{invoice.invoice}</TableCell>
-                <TableCell>{invoice.paymentStatus}</TableCell>
-                <TableCell>{invoice.paymentMethod}</TableCell>
-                <TableCell className="text-right">
-                  {invoice.totalAmount}
-                </TableCell>
+        <CardContent>
+          <Table className="rounded-md">
+            {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[100px]">Invoice</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Method</TableHead>
+                <TableHead className="text-right">Amount</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TableCell colSpan={3}>Total</TableCell>
-              <TableCell className="text-right">$2,500.00</TableCell>
-            </TableRow>
-          </TableFooter>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {invoices.map((invoice) => (
+                <TableRow key={invoice.invoice}>
+                  <TableCell className="font-medium">
+                    {invoice.invoice}
+                  </TableCell>
+                  <TableCell>{invoice.paymentStatus}</TableCell>
+                  <TableCell>{invoice.paymentMethod}</TableCell>
+                  <TableCell className="text-right">
+                    {invoice.totalAmount}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TableCell colSpan={3}>Total</TableCell>
+                <TableCell className="text-right">$2,500.00</TableCell>
+              </TableRow>
+            </TableFooter>
+          </Table>
+        </CardContent>
       </Card>
 
       {/* <div className="mx-auto max-w-7xl px-4 py-8">
