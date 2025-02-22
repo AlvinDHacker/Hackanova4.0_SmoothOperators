@@ -11,6 +11,7 @@ const DemoButtons = () => {
   const showdemofunction = () => {
     const driverObj = driver({
       popoverClass: 'driverjs-theme',
+      allowClose: false,
       showProgress: true,
       steps: [
         {
