@@ -15,6 +15,7 @@ import { ConfettiButton } from "~/components/ui/confetti";
 import Testimonials from "~/components/Testimonials";
 import CTA from "~/components/CTA";
 import Footer from "~/components/Footer";
+import HowItWorks from "~/components/HowItWorks";
 
 const slugs = [
   // Blockchain & Crypto
@@ -53,16 +54,16 @@ const images = slugs.map(
 );
 
 export default async function Home() {
-    if (typeof document !== 'undefined') {
-      // const drive = driver();
-      // drive.highlight({
-      //   element: "#showdemo",
-      //   popover: {
-      //     title: "Take A Demo With Us",
-      //     description: "a detailed explanation on how to use Relief ResQ"
-      //   }
-      // });
-    }
+  if (typeof document !== "undefined") {
+    // const drive = driver();
+    // drive.highlight({
+    //   element: "#showdemo",
+    //   popover: {
+    //     title: "Take A Demo With Us",
+    //     description: "a detailed explanation on how to use Relief ResQ"
+    //   }
+    // });
+  }
   return (
     <div>
       <>
@@ -195,39 +196,27 @@ export default async function Home() {
               </p>
             </div> */}
           </div>
-
+          <HowItWorks />
           <div className="mx-auto grid-cols-2 gap-7 pb-16 md:mb-16 md:grid">
             <div className="hidden sm:block">
               <AnimatedListDemo />
             </div>
             <div className="mb-6 flex flex-col items-center justify-between text-black dark:text-white sm:mb-16">
               <div className="my-auto">
-                <h2 className="font-poppins mb-3 w-full text-3xl font-semibold">
-                  How it Works ?
+                <h2 className="font-poppins mb-4 mt-10 w-full text-3xl font-semibold">
+                  Prepared for Every Emergency
                 </h2>
-                <div className="mt-6 w-full md:mt-0">
-                  <ul className="font-poppins text-dimWhite text-md mb-6 space-y-2 text-left font-normal">
-                    <li>
-                      1️⃣ AI scrapes real-time disaster news & verifies it with
-                      on-ground sources.
-                    </li>
-                    <li>
-                      2️⃣ NGOs confirm the crisis & estimate aid requirements.
-                    </li>
-                    <li>
-                      3️⃣ Funds are auto-released via smart contracts to verified
-                      NGOs & vendors.
-                    </li>
-                    <li>
-                      4️⃣ Vendors supply aid & submit proofs (bills, GPS-stamped
-                      images, videos).
-                    </li>
-                    <li>
-                      5️⃣ All transactions are logged on blockchain for full
-                      transparency & accountability.
-                    </li>
-                  </ul>
+                <div className="mt-6 w-full">
+                  <p className="font-poppins text-dimWhite text-md mb-6 max-w-[450px] text-left font-normal">
+                    Be a part of the future of emergency response. <br />
+                    Whether as a donor, volunteer, or partner, you can help save
+                    lives and support communities in crisis with speed and
+                    efficiency. <br />
+                    Plus, our platform is built with cutting-edge security for
+                    complete trust and reliability.
+                  </p>
                 </div>
+                <ConfettiButton>Get Involved 🎉</ConfettiButton>
               </div>
             </div>
             <div className="block sm:hidden">

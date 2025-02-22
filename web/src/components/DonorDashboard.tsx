@@ -76,7 +76,7 @@ const DonorDashboard = ({ user }: any) => {
                   {user?.name || "NGO Name"}
                 </h1>
                 <p className="">{user?.email || "xyz@gmail.com"}</p>
-                <div className="mt-2 flex gap-4">
+                <div className="mt-2 flex flex-col gap-1 sm:flex-row sm:gap-4">
                   <span className="flex items-center gap-1">
                     <Phone className="h-4 w-4" />
                     {user?.phone || "website.org"}
