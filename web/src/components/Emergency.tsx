@@ -148,19 +148,19 @@ const Emergency = () => {
         },
       });
       const data = await response.json();
-      // const uniqueArticles = data.disasters?.reduce((acc: any[], current: any) => {
-      //   const isDuplicate = acc.find((item: any) => 
-      //     item.title === current.title && 
-      //     new Date(item.published).getTime() === new Date(current.published).getTime()
-      //   );
-      //   if (!isDuplicate) {
-      //     acc.push(current);
-      //   }
-      //   return acc;
-      // }, []) || [];
+      const uniqueArticles = data.disasters?.reduce((acc: any[], current: any) => {
+        const isDuplicate = acc.find((item: any) => 
+          item.title === current.title && 
+          new Date(item.published).getTime() === new Date(current.published).getTime()
+        );
+        if (!isDuplicate) {
+          acc.push(current);
+        }
+        return acc;
+      }, []) || [];
 
-      // setArticles(uniqueArticles);
-      setArticles(data.disasters || []);
+      setArticles(uniqueArticles);
+      // setArticles(data.disasters || []);
       setError(null);
     } catch (err) {
       setError("Failed to fetch emergency news");
