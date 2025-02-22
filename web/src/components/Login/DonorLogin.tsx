@@ -27,6 +27,8 @@ import { SiweMessage, generateNonce } from "siwe";
 import { BrowserProvider, Contract } from "ethers";
 import contractAbi from "../../../contract/ResQ.json";
 import { checkUser } from "~/app/api/manageUser";
+import type { ResQ } from "typechain-types/ResQ";
+import type { JsonRpcSigner } from "ethers";
 
 const DonorLogin = () => {
   const [next, setNext] = useState(false);
@@ -40,7 +42,7 @@ const DonorLogin = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [signature, setSignature] = useState("");
-  const [signer, setSigner] = useState();
+  const [signer, setSigner] = useState<JsonRpcSigner>();
   const [isOpen, setIsOpen] = useState(false);
 
   const openDialog = () => setIsOpen(true);
@@ -61,17 +63,19 @@ const DonorLogin = () => {
         throw new Error("Contract address is missing in .env");
       }
 
-      const contractInstance = new Contract(
+      const contractInstance: ResQ = new Contract(
         contractAddress,
         contractAbi.abi,
         signer,
-      );
+      ) as unknown as ResQ;
 
-      contractInstance.registerDonor(
-        signer.address,
-        `did:ethr:${signer.address}`,
-        data.aadhar,
-      );
+      if (signer) {
+        contractInstance.registerDonor(
+          signer.address,
+          `did:ethr:${signer.address}`,
+          data.aadhar,
+        );
+      }
     } catch (err) {
       console.error("Login failed:", err);
     } finally {
