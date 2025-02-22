@@ -50,6 +50,8 @@ import {
 import { Button } from "./ui/button";
 import DisburseFunds from "./DisburseFunds";
 import UploadProof from "./UploadProof";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 
 const NGODashboard = ({ ngo }: any) => {
   const disasterData = [
@@ -96,8 +98,71 @@ const NGODashboard = ({ ngo }: any) => {
     },
   ];
 
+  const ngodemofunction = () => {
+        const driverObj = driver({
+          popoverClass: 'driverjs-theme',
+          allowClose: false,
+          showProgress: true,
+          steps: [
+            {
+              element: "#ngodetails",
+              popover: {
+                title: "NGO Details",
+                description: "View the basic information available about the NGO, including its mission and relief efforts.",
+              },
+            },
+            {
+              element: "#activedisasters",
+              popover: {
+                title: "Ongoing Disasters",
+                description: "Check the active disaster zones where relief efforts are currently underway.",
+              },
+            },
+            {
+              element: "#peoplereached",
+              popover: {
+                title: "Lives Impacted",
+                description: " See the number of people who have received aid through your NGO",
+              },
+            },{
+              element: "#fundsutilised",
+              popover: {
+                title: "Funds Utilized",
+                description: "Track how and where your donated funds are being used in disaster relief efforts.",
+              },
+            },
+            {
+              element: "#focusareas",
+              popover: {
+                title: "Focus Areas",
+                description: "Explore the key regions and causes where your NGO's contributions are making a difference.",
+              },
+            },
+            {
+              element: "#requestfund",
+              popover: {
+                title: "Request Fund Allocation",
+                description: "Submit a request for fund allocation to support urgent disaster relief operations.",
+              },
+            },
+            {
+              element: "#uploadproof",
+              popover: {
+                title: "Upload Proof of Aid",
+                description: "Upload documents or images as proof of aid delivery for accountability and transparency.",
+              },
+            },
+
+          ],
+        });
+    
+        // Start the tour
+        driverObj.drive();
+      }
+
   return (
     <div className="flex min-h-screen w-full flex-col gap-4 p-2 sm:p-8">
+      <div id ="ngodetails">
       <Card className="">
         <CardContent className="p-6">
           <div className="flex flex-col justify-between gap-3 sm:flex-row">
@@ -123,14 +188,20 @@ const NGODashboard = ({ ngo }: any) => {
               </div>
             </div>
             <div className="flex gap-3">
-              <DisburseFunds />
+              <div id = "requestfund">
+                <DisburseFunds />
+              </div>
+              <div id = "uploadproof">
               <UploadProof />
+              </div>
             </div>
+              <Button variant={"outline"} onClick={ngodemofunction}>Show Demo</Button>
           </div>
         </CardContent>
       </Card>
-
+      </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div id ="activedisasters">
         <Card className="relative overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">
@@ -144,8 +215,9 @@ const NGODashboard = ({ ngo }: any) => {
           </CardContent>
           <div className="absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-red-500 to-orange-500"></div>
         </Card>
-
-        <Card className="relative overflow-hidden">
+        </div>
+        <div id ="peoplereached">
+          <Card className="relative overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">
               People Reached
@@ -158,7 +230,8 @@ const NGODashboard = ({ ngo }: any) => {
           </CardContent>
           <div className="absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-blue-500 to-cyan-500"></div>
         </Card>
-
+        </div>
+        <div id ="fundsutilised">
         <Card className="relative overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">
@@ -172,7 +245,8 @@ const NGODashboard = ({ ngo }: any) => {
           </CardContent>
           <div className="absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-green-500 to-emerald-500"></div>
         </Card>
-
+        </div>
+        <div id = "focusareas">
         <Card className="relative overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Focus Areas</CardTitle>
@@ -184,6 +258,7 @@ const NGODashboard = ({ ngo }: any) => {
           </CardContent>
           <div className="absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-purple-500 to-pink-500"></div>
         </Card>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
