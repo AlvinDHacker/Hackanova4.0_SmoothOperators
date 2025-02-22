@@ -1,11 +1,13 @@
 "use client";
 import React, { useEffect, useState, useContext, createContext } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { getUser } from "~/app/api/manageUser";
 import { User } from "@prisma/client";
 import { useSession } from "next-auth/react";
 
 interface UserContextType {
-  user: SessUser | null;
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
 interface UserProviderProps {
@@ -14,38 +16,34 @@ interface UserProviderProps {
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-interface SessUser {
-  walletId: string;
-  id: string;
-  name?: string | null | undefined;
-  email?: string | null | undefined;
-  address?: string | undefined;
-}
-
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<SessUser | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const { data: session, status } = useSession();
   const currPath = usePathname();
   const router = useRouter();
 
   useEffect(() => {
-    console.log("first", session);
+    const findUser = async () => {
+      const u = await getUser(session?.user.id as string);
+      setUser(u);
+    };
+
     if (
       status === "unauthenticated" &&
       currPath !== "/login" &&
       currPath !== "/home" &&
       currPath !== "/signup"
     ) {
-      // router.push("/login");
-    } else {
-      if (status == "authenticated") {
-        setUser(session.user);
-      }
+      router.push("/login");
+    } else if (status === "authenticated") {
+      findUser();
     }
   }, [status, session, router]);
 
   return (
-    <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>
+    <UserContext.Provider value={{ user, setUser }}>
+      {children}
+    </UserContext.Provider>
   );
 };
 
