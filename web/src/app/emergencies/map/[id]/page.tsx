@@ -1,4 +1,3 @@
-// app/map/[id]/page.tsx
 import { type Location } from "~/types/map";
 import DisasterSingle from "~/components/DisasterSingle";
 
@@ -16,7 +15,11 @@ const getDummyLocation = (id: string): Location => {
   };
 };
 
-export default function LocationPage({ params }: { params: { id: string } }) {
-  const location = getDummyLocation(params.id);
+// Make the component async and properly type the params
+export default async function LocationPage({ params }: any) {
+  const { id } = await params;
+
+  // Since we're using an async component, we can now safely access params
+  const location = getDummyLocation(await id);
   return <DisasterSingle location={location} />;
 }
