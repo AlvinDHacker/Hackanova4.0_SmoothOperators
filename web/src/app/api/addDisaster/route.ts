@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
           locationLat: parseFloat(lat),
           locationLong: parseFloat(long),
           description: `${disasterName} brought to notice by ${name}`,
+          link: "SMS",
         },
       });
 

@@ -95,7 +95,7 @@ model Disaster {
     id           String         @id @default(cuid())
     name         String
     description  String
-    link         String
+    link         String?
     locationLat  Float
     locationLong Float
     severity     Severity       @default(HIGH)
