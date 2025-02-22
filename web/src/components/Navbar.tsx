@@ -20,6 +20,7 @@ import {
 import { BarChart2, ClipboardPen, Files, Globe } from "lucide-react";
 import { cn } from "~/lib/utils";
 import { usePathname } from "next/navigation";
+import MainLogin from "./Login/MainLogin";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -46,14 +47,12 @@ const Navbar = () => {
 
           <div className="flex items-center gap-4">
             <Link href={"/emergencies"}>
-              <div className="hidden items-center gap-8 hover:text-green-600 sm:flex">
-                Emergencies
+              <div className="hidden items-center gap-8 text-sm font-medium hover:text-green-600 hover:underline sm:flex">
+                Emergency
               </div>
             </Link>
             <ModeToggle />
-
-            {/* <HeaderActions /> */}
-            <Loader2 className="animate-spin" />
+            <MainLogin />
           </div>
         </div>
       </div>

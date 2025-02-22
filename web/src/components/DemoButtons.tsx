@@ -6,7 +6,6 @@ import { Button } from "~/components/ui/button";
 import MainLogin from "~/components/Login/MainLogin";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
-import DisburseFunds from "./DisburseFunds";
 
 const DemoButtons = () => {
   const showdemofunction = () => {
@@ -62,7 +61,6 @@ const DemoButtons = () => {
       <Button id="showdemo" variant="outline" onClick={showdemofunction}>
         Show Demo
       </Button>
-      <DisburseFunds />
     </div>
   );
 };

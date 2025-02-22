@@ -56,7 +56,7 @@ const NgoLogin = () => {
     lon: 0.0,
     userType: "NGO",
   });
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState<SiweMessage>();
   const [signature, setSignature] = useState("");
   const [signer, setSigner] = useState<JsonRpcSigner>();
   const [isOpen, setIsOpen] = useState(false);
@@ -138,7 +138,7 @@ const NgoLogin = () => {
           focusArea: JSON.stringify(data.focusArea),
         });
       } else {
-        setMessage(JSON.stringify(message));
+        setMessage(message);
         setSignature(signature);
         setSigner(tsigner);
         openDialog();
