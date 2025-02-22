@@ -59,7 +59,7 @@ const DemoButtons = () => {
       <div id = "login">
       <MainLogin />
       </div>
-      <Button className="" id="showdemo" variant="outline" onClick={showdemofunction}>
+      <Button id="showdemo" variant="outline" onClick={showdemofunction}>
         Show Demo
       </Button>
     </div>
