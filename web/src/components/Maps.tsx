@@ -11,15 +11,34 @@ const Map = () => {
 
   const positions: Location[] = [
     {
-      id: "1",
-      position: [51.505, -0.09],
-      title: "Location 1",
-      description: "This is location 1",
-      address: "123 Main St",
-      rating: 4.5,
-      openingHours: "9:00 AM - 6:00 PM",
-      features: ["WiFi", "Parking"],
-      reviews: [],
+      id: "cm7fpu1sw00a29mr0oura7oyp",
+      position: [19.2, 72.87],
+      title: "16-year-old dies of heart attack in Telangana’s Kamareddy",
+      description:
+        "Hyderabad News: Student Dies Of Heart Attack On Way To School In Telangana, Teachers In Shock - Jagran English",
+      link: "https://news.google.com/rss/articles/CBMizgFBVV95cUxOdVN3TmFvTi1sSkRiUWdwcTBTbEdYY05Pcl9jX3JUcVZ4MEFJZ1Q2SjR3cW5VQXV6VmRaekV2Sk1RWlBQTENFY0xyREZ0d0hXME0wdk9pUEpXT3RVZURxYVI3U0tnUThLMzdVRGptNz",
+      severity: "LOW",
+      status: "ACTIVE",
+    },
+    {
+      id: "cm7fpu1ua00a89mr0tuh8q7ti",
+      position: [19.1, 72.83],
+      title:
+        "First wave of COVID-19 increased risk of heart attack, stroke up to three years later - National Institutes of Health",
+      description: "National Institutes of Health",
+      link: "https://news.google.com/rss/articles/CBMiugFBVV95cUxOUkk1ODhlcU90dVJOZWo0d0pIaVdIT1NMWW1nX3laZTZ6ZERhcGFfTGw4ZGZVY0NnMGtIdUI5ZG9vMTlZYkJCeUJWZDRPdnkwb19Rd1k0WEZmUW9qYjJjOW5KYkFCTjlIekdjWkd1aF",
+      severity: "HIGH",
+      status: "ACTIVE",
+    },
+    {
+      id: "cm7fpu1uf00a99mr0n0kxwz2g",
+      position: [19.15, 72.88],
+      title:
+        "Telangana: Class 10 student dies of heart attack in Kamareddy, third such case in recent months - Moneycontrol",
+      description: "National Institutes of Health",
+      link: "https://news.google.com/rss/articles/CBMiugFBVV95cUxOUkk1ODhlcU90dVJOZWo0d0pIaVdIT1NMWW1nX3laZTZ6ZERhcGFfTGw4ZGZVY0NnMGtIdUI5ZG9vMTlZYkJCeUJWZDRPdnkwb19Rd1k0WEZmUW9qYjJjOW5KYkFCTjlIekdjWkd1aF",
+      severity: "HIGH",
+      status: "ACTIVE",
     },
     // Add more locations as needed
   ];
