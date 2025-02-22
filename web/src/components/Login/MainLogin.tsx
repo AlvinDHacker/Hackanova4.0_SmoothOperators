@@ -18,6 +18,7 @@ import NgoLogin from "./NgoLogin";
 import { useUser } from "../AuthComponent";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { signOut } from "next-auth/react";
+import { Badge } from "../ui/badge";
 
 const MainLogin = () => {
   const img = `https://cdn.simpleicons.org/ethereum/ethereum`;
@@ -101,7 +102,7 @@ const MainLogin = () => {
           }}
           variant="outline"
         >
-          Logout
+          Logout | <Badge className="px-4 text-xs">{user?.userType}</Badge>
         </Button>
       )}
     </div>
