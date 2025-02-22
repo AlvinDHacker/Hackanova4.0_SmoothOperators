@@ -11,6 +11,7 @@ const DemoButtons = () => {
   const showdemofunction = () => {
     const driverObj = driver({
       popoverClass: 'driverjs-theme',
+      allowClose: false,
       showProgress: true,
       steps: [
         {
@@ -58,7 +59,7 @@ const DemoButtons = () => {
       <div id = "login">
       <MainLogin />
       </div>
-      <Button id="showdemo" variant="outline" onClick={showdemofunction}>
+      <Button className="" id="showdemo" variant="outline" onClick={showdemofunction}>
         Show Demo
       </Button>
     </div>

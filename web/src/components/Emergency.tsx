@@ -114,61 +114,88 @@ const Emergency = () => {
   const [sepoliaEth, setSepoliaEth] = useState<string>("");
   const [convertedAmount, setConvertedAmount] = useState<number>(0);
 
-  const fetchArticles = async (endpoint = "/api/disasters") => {
+  // const fetchArticles = async (endpoint = "/api/disasters") => {
+  //   try {
+  //     setLoading(true);
+
+  //     if (endpoint === "/api/disasters") {
+  //       const newsResponse = await fetch(`${API_BASE_URL}/emergency-news`);
+  //       const newsData = await newsResponse.json();
+  //       console.log(newsData.articles.length);
+
+  //       await fetch("/api/disasters", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify(newsData.articles),
+  //       });
+  //     }
+
+  //     let queryEndpoint = "/api/disasters";
+  //     if (endpoint.includes("by-type")) {
+  //       queryEndpoint += `?type=${endpoint.split("/").pop()}`;
+  //     } else if (endpoint.includes("by-severity")) {
+  //       queryEndpoint += `?severity=${endpoint.split("/").pop()}`;
+  //     } else if (endpoint.includes("search")) {
+  //       queryEndpoint += `?search=${endpoint.split("/").pop()}`;
+  //     }
+
+  //     const response = await fetch(queryEndpoint, {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
+  //     const data = await response.json();
+  //     const uniqueArticles = data.disasters?.reduce((acc: any[], current: any) => {
+  //       const isDuplicate = acc.find((item: any) => 
+  //         item.title === current.title && 
+  //         new Date(item.published).getTime() === new Date(current.published).getTime()
+  //       );
+  //       if (!isDuplicate) {
+  //         acc.push(current);
+  //       }
+  //       return acc;
+  //     }, []) || [];
+
+  //     setArticles(uniqueArticles);
+  //     // setArticles(data.disasters || []);
+  //     setError(null);
+  //   } catch (err) {
+  //     setError("Failed to fetch emergency news");
+  //     setArticles([]);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const fetchArticles = async (endpoint = '/emergency-news') => {
     try {
       setLoading(true);
-
-      if (endpoint === "/api/disasters") {
-        const newsResponse = await fetch(`${API_BASE_URL}/emergency-news`);
-        const newsData = await newsResponse.json();
-        console.log(newsData.articles.length);
-
-        await fetch("/api/disasters", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newsData.articles),
-        });
-      }
-
-      let queryEndpoint = "/api/disasters";
-      if (endpoint.includes("by-type")) {
-        queryEndpoint += `?type=${endpoint.split("/").pop()}`;
-      } else if (endpoint.includes("by-severity")) {
-        queryEndpoint += `?severity=${endpoint.split("/").pop()}`;
-      } else if (endpoint.includes("search")) {
-        queryEndpoint += `?search=${endpoint.split("/").pop()}`;
-      }
-
-      const response = await fetch(queryEndpoint, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(`${API_BASE_URL}${endpoint}`);
       const data = await response.json();
-      const uniqueArticles = data.disasters?.reduce((acc: any[], current: any) => {
-        const isDuplicate = acc.find((item: any) => 
-          item.title === current.title && 
-          new Date(item.published).getTime() === new Date(current.published).getTime()
-        );
-        if (!isDuplicate) {
-          acc.push(current);
-        }
-        return acc;
-      }, []) || [];
-
-      setArticles(uniqueArticles);
-      // setArticles(data.disasters || []);
+      setArticles(data.articles || []);
       setError(null);
     } catch (err) {
-      setError("Failed to fetch emergency news");
+      setError('Failed to fetch emergency news');
       setArticles([]);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (selectedCategory !== "all") {
+      fetchArticles(`/emergency-news/by-type/${selectedCategory}`);
+    } else if (selectedSeverity !== "all") {
+      fetchArticles(`/emergency-news/by-severity/${selectedSeverity}`);
+    } else if (searchKeyword) {
+      fetchArticles(`/search/${encodeURIComponent(searchKeyword)}`);
+    } else {
+      fetchArticles();
+    }
+  }, [selectedCategory, selectedSeverity, searchKeyword]);
 
   useEffect(() => {
     if (ethPrice && sepoliaEth) {
@@ -196,18 +223,6 @@ const Emergency = () => {
     fetchArticles();
   }, []);
 
-  useEffect(() => {
-    if (selectedCategory !== "all") {
-      fetchArticles(`/emergency-news/by-type/${selectedCategory}`);
-    } else if (selectedSeverity !== "all") {
-      fetchArticles(`/emergency-news/by-severity/${selectedSeverity}`);
-    } else if (searchKeyword) {
-      fetchArticles(`/search/${encodeURIComponent(searchKeyword)}`);
-    } else {
-      fetchArticles();
-    }
-  }, [selectedCategory, selectedSeverity, searchKeyword]);
-
   const handleTransaction = async () => {
     const provider = new BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
@@ -234,8 +249,26 @@ const Emergency = () => {
       console.error("Error depositing funds:", error);
     }
   };
-
   
+  const handleSearch = (e: any) => {
+    e.preventDefault();
+    const searchInput = e.target.elements.search.value;
+    setSearchKeyword(searchInput);
+    setSelectedCategory("all");
+    setSelectedSeverity("all");
+  };
+
+  const handleCategoryChange = (value: any) => {
+    setSelectedCategory(value);
+    setSelectedSeverity("all");
+    setSearchKeyword("");
+  };
+
+  const handleSeverityChange = (value: any) => {
+    setSelectedSeverity(value);
+    setSelectedCategory("all");
+    setSearchKeyword("");
+  };
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
@@ -249,7 +282,7 @@ const Emergency = () => {
       <div className="mb-6 flex flex-wrap items-center gap-4">
         <div className="flex flex-wrap items-center gap-4">
           <Filter className="h-5 w-5" />
-          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+          <Select value={selectedCategory} onValueChange={handleCategoryChange}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Emergency Type" />
             </SelectTrigger>
@@ -263,7 +296,7 @@ const Emergency = () => {
             </SelectContent>
           </Select>
 
-          <Select value={selectedSeverity} onValueChange={setSelectedSeverity}>
+          <Select value={selectedSeverity} onValueChange={handleSeverityChange}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Severity" />
             </SelectTrigger>
@@ -276,13 +309,12 @@ const Emergency = () => {
           </Select>
         </div>
 
-        <form className="flex gap-2">
+        <form onSubmit={handleSearch} className="flex gap-2">
           <Input
             type="search"
             name="search"
             placeholder="Search emergencies..."
             className="w-[200px]"
-            onChange={(e) => setSearchKeyword(e.target.value)}
           />
           <Button type="submit" variant="secondary">
             <Search className="h-4 w-4" />

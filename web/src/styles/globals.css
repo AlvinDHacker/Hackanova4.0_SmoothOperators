@@ -89,3 +89,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+.driver-popover.driverjs-theme {
+  background-color: #5cde5e;
+  color: #000;
+}

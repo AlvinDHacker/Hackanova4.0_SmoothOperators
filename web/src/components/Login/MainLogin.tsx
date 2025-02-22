@@ -31,7 +31,7 @@ const MainLogin = () => {
       {!user ? (
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="outline">Login</Button>
+            <Button className="dark:bg-white dark:text-black text-white bg-black" variant="outline">Login</Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
