@@ -6,7 +6,6 @@ import { Button } from "~/components/ui/button";
 import MainLogin from "~/components/Login/MainLogin";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
-import DisburseFunds from "./DisburseFunds";
 
 const DemoButtons = () => {
   useEffect(() => {
@@ -43,7 +42,6 @@ const DemoButtons = () => {
       <Button id="showdemo" variant="outline">
         Show Demo
       </Button>
-      <DisburseFunds />
     </div>
   );
 };
