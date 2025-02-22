@@ -3,9 +3,30 @@ import DonorDashboard from "~/components/DonorDashboard";
 import NgoDashboard from "~/components/NgoDashboard";
 import SideNav from "~/components/Sidenav";
 import { useUser } from "~/components/AuthComponent";
+import { useEffect, useState } from "react";
+import { getNGOInfo } from "../api/getNGOInfo/route";
 
 export default function DashboardPage() {
+  interface NGO {
+    name: string;
+    locationLat: number;
+    locationLong: number;
+    mission: string;
+    website: string | null;
+  }
   const { user } = useUser();
+  const [info, setInfo] = useState<NGO | null>(null);
+  useEffect(() => {
+    if (user?.userType === "NGO") {
+      const fetchNGOInfo = async () => {
+        const ngo = await getNGOInfo(user.id);
+        setInfo(ngo);
+      };
+
+      fetchNGOInfo();
+    }
+  }, [user]);
+
   return (
     <div className="container mx-auto block sm:flex sm:gap-24">
       <SideNav />
@@ -13,11 +34,11 @@ export default function DashboardPage() {
         {user?.userType == "NGO" ? (
           <NgoDashboard
             ngo={{
-              name: "NGO A",
-              mission: "Mission",
-              website: "https://relief-resq-beta.vercel.app/",
-              locationLat: 12.9716,
-              locationLong: 77.5946,
+              name: user.name,
+              mission: info?.mission,
+              website: info?.website,
+              locationLat: info?.locationLat,
+              locationLong: info?.locationLong,
             }}
           />
         ) : (
