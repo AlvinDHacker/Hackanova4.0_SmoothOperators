@@ -4,6 +4,7 @@ import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Icon } from "leaflet";
 import { useRouter } from "next/navigation";
+import { Card } from "./ui/card";
 
 const Map = () => {
   const router = useRouter();
@@ -58,7 +59,7 @@ const Map = () => {
             icon={defaultIcon}
           >
             <Popup>
-              <div>
+              <div className="p-3">
                 <strong>{location.title}</strong>
                 <br />
                 {location.description}

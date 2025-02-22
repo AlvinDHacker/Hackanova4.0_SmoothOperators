@@ -81,11 +81,7 @@ const EmergencyCard = ({ article }: any) => (
           </Button>
         </a>
         <DonorPay />
-        <a
-          href={`/emergencies/map/${article.id}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href={`/emergencies/map/${article.title}`}>
           <Button className="bg-green-600 text-white hover:bg-green-500 dark:bg-green-700">
             <ExternalLink />
           </Button>

@@ -97,7 +97,9 @@ const DisasterSingle: React.FC<DisasterSingleProps> = ({ location }) => {
         <CardHeader className="mx-auto w-full px-4 py-6">
           <div className="flex w-full items-center justify-between">
             <div>
-              <CardTitle className="text-2xl">{location.title}</CardTitle>
+              <div className="flex-wrap">
+                <CardTitle className="text-2xl">{location.title}</CardTitle>
+              </div>
               <CardDescription>Location</CardDescription>
             </div>
             <Button
@@ -111,10 +113,10 @@ const DisasterSingle: React.FC<DisasterSingleProps> = ({ location }) => {
         </CardHeader>
       </Card>
 
-      <div className="my-2 grid grid-cols-2 gap-3">
+      <div className="my-2 grid gap-3 sm:grid-cols-2">
         <LabelledPieChart data={piechart} />
         <AreaChartSimple data={simpleareachart} />
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid gap-3 sm:grid-cols-2">
           <Card>
             <CardHeader className="items-start pb-0">
               <CardTitle>No. of People Reached</CardTitle>
@@ -160,6 +162,13 @@ const DisasterSingle: React.FC<DisasterSingleProps> = ({ location }) => {
       </div>
 
       <Card className="p-2">
+        <CardHeader className="flex w-full justify-between">
+          <div>
+            <CardTitle>News Content</CardTitle>
+            <CardDescription>About the disaster</CardDescription>
+          </div>
+          <ExternalLink className="my-auto" />
+        </CardHeader>
         <Table className="rounded-md">
           {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
           <TableHeader>

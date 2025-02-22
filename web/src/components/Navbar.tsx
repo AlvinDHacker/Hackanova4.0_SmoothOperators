@@ -66,7 +66,7 @@ const Navbar = () => {
               <Link href={"/"}>
                 <Home
                   className={cn("text-second size-6", {
-                    "text-green-600": pathname.endsWith("/search"),
+                    "text-green-600": pathname.endsWith("/"),
                   })}
                 />
               </Link>
@@ -75,7 +75,7 @@ const Navbar = () => {
               <Link href={"/emergencies"}>
                 <Earth
                   className={cn("text-second size-6", {
-                    "text-green-600": pathname.endsWith("/documents"),
+                    "text-green-600": pathname.endsWith("/emergencies"),
                   })}
                 />
               </Link>
@@ -84,7 +84,7 @@ const Navbar = () => {
               <Link href={"/emergencies/map"}>
                 <Map
                   className={cn("text-second size-6", {
-                    "text-green-600": pathname.endsWith("/finnosearch"),
+                    "text-green-600": pathname.endsWith("/emergencies/map/"),
                   })}
                 />
               </Link>
