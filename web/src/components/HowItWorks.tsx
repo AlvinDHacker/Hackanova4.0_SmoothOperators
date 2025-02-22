@@ -82,10 +82,10 @@ const HowItWorks = () => {
               )}
 
               {/* Card */}
-              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-gray-800 to-gray-700 p-px transition-all duration-300 group-hover:from-blue-500 group-hover:to-purple-500">
-                <div className="relative h-full rounded-2xl bg-gray-900 p-6">
+              <div className="relative overflow-hidden rounded-2xl p-px transition-all duration-300 group-hover:from-blue-500 group-hover:to-purple-500">
+                <div className="relative h-full rounded-2xl bg-gray-200 hover:bg-gray-100 hover:shadow-lg dark:bg-gray-800 dark:hover:bg-gray-900 p-6">
                   {/* Step number */}
-                  <div className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-gray-700 to-gray-600 text-sm font-bold">
+                  <div className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full dark:bg-gray-600 bg-white text-sm font-bold">
                     {index + 1}
                   </div>
 
@@ -97,10 +97,10 @@ const HowItWorks = () => {
                   </div>
 
                   {/* Content */}
-                  <h3 className="mb-2 text-xl font-semibold text-white">
+                  <h3 className="mb-2 text-xl font-semibold dark:text-white text-black">
                     {step.title}
                   </h3>
-                  <p className="text-sm leading-relaxed text-gray-400">
+                  <p className="text-sm leading-relaxed dark:text-gray-400 text-gray-600">
                     {step.description}
                   </p>
                 </div>
