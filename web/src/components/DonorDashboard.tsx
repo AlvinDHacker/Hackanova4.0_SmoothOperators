@@ -34,6 +34,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { Button } from "./ui/button";
 
 const DonorDashboard = ({ user }: any) => {
   const donationHistory = [
@@ -88,6 +89,7 @@ const DonorDashboard = ({ user }: any) => {
                 </div>
               </div>
             </div>
+            <Button variant={"outline"}>Show Demo</Button>
           </div>
         </CardContent>
       </Card>
