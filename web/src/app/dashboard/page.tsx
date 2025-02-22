@@ -13,9 +13,9 @@ export default function DashboardPage() {
         {user?.userType == "NGO" ? (
           <NgoDashboard
             ngo={{
-              name: "NGO Name",
-              mission: "Mission Statement",
-              website: "website.org",
+              name: "NGO A",
+              mission: "Mission",
+              website: "https://relief-resq-beta.vercel.app/",
               locationLat: 12.9716,
               locationLong: 77.5946,
             }}
