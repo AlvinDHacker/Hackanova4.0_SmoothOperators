@@ -6,6 +6,10 @@ import { AnimatedListDemo } from "~/components/ui/AnimatedListDemo";
 import HeroTerminal from "~/components/HeroTerminal";
 import DonorLogin from "~/components/Login/DonorLogin";
 import MainLogin from "~/components/Login/MainLogin";
+import { Button } from "~/components/ui/button";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+import DemoButtons from "~/components/DemoButtons";
 import { EvervaultCard, Icon } from "~/components/ui/evervault-card";
 
 const slugs = [
@@ -55,6 +59,16 @@ const images = slugs.map(
 );
 
 export default async function Home() {
+    if (typeof document !== 'undefined') {
+      const drive = driver();
+      drive.highlight({
+        element: "#showdemo",
+        popover: {
+          title: "Take A Demo With Us",
+          description: "a detailed explanation on how to use Relief ResQ"
+        }
+      });
+    }
   return (
     <div>
       <>
@@ -98,7 +112,11 @@ export default async function Home() {
                 to aid distribution in rural India.
               </p>
 
-              <MainLogin />
+              {/* <div className="flex items-center">
+                <MainLogin />
+                <Button id = "showdemo" variant="outline">Show Demo</Button>
+              </div> */}
+              <DemoButtons />
             </div>
           </div>
 

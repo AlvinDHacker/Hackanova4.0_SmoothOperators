@@ -1,18 +1,16 @@
 "use client";
-import { BellRing, ChevronLeft, Wallet } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import React, { useState } from "react";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "~/components/ui/dialog";
 import {
   InputOTP,
@@ -24,7 +22,7 @@ import { Separator } from "../ui/separator";
 import { AnimatePresence, motion } from "motion/react";
 import { signIn } from "next-auth/react";
 import { SiweMessage, generateNonce } from "siwe";
-import { BrowserProvider, Contract } from "ethers";
+import { BrowserProvider, Contract, JsonRpcSigner } from "ethers";
 import contractAbi from "../../../contract/ResQ.json";
 import { checkUser } from "~/app/api/manageUser";
 import type { ResQ } from "typechain-types/ResQ";
@@ -33,7 +31,7 @@ import type { JsonRpcSigner } from "ethers";
 const DonorLogin = () => {
   const [next, setNext] = useState(false);
   const img = `https://cdn.simpleicons.org/ethereum/ethereum`;
-  const [data, setData] = useState({
+  const [data, setData] = useState<FormData>({
     name: "",
     phoneNo: "",
     aadhar: "",
@@ -84,7 +82,10 @@ const DonorLogin = () => {
   };
 
   const handleLogin = async () => {
-    if (!window.ethereum) return alert("MetaMask required");
+    if (!window.ethereum) {
+      alert("MetaMask required");
+      return;
+    }
 
     setLoading(true);
     try {
@@ -92,7 +93,7 @@ const DonorLogin = () => {
       const tsigner = await provider.getSigner();
       const address = await tsigner.getAddress();
 
-      const userExists = await checkUser(tsigner.address);
+      const userExists = await checkUser(address);
       const message = new SiweMessage({
         domain: window.location.host,
         address,
@@ -119,7 +120,9 @@ const DonorLogin = () => {
         openDialog();
       }
     } catch (e) {
-      console.log(e);
+      console.error("Login error:", e);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -129,9 +132,6 @@ const DonorLogin = () => {
         Login as Donor
       </Button>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        {/* <DialogTrigger asChild>
-          
-        </DialogTrigger> */}
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Login as a Donor</DialogTitle>
@@ -163,7 +163,7 @@ const DonorLogin = () => {
                     />
                   </div>
                   <div className="flex flex-col space-y-1.5">
-                    <Label htmlFor="name">Phone No.</Label>
+                    <Label htmlFor="phoneNo">Phone No.</Label>
                     <Input
                       onChange={(e) => {
                         setData((prev) => ({
@@ -171,12 +171,12 @@ const DonorLogin = () => {
                           phoneNo: e.target.value,
                         }));
                       }}
-                      id="name"
+                      id="phoneNo"
                       placeholder="+91"
                     />
                   </div>
                   <div className="flex flex-col space-y-1.5">
-                    <Label htmlFor="name">Aadhar Card No.</Label>
+                    <Label htmlFor="aadhar">Aadhar Card No.</Label>
                     <Input
                       onChange={(e) => {
                         setData((prev) => ({
@@ -184,46 +184,36 @@ const DonorLogin = () => {
                           aadhar: e.target.value,
                         }));
                       }}
-                      id="name"
+                      id="aadhar"
                     />
                   </div>
                 </div>
                 <Separator />
                 <DialogFooter>
                   <div className="mt-2 flex justify-between gap-3">
-                    {/* <Button onClick={() => setNext(false)} variant="outline">
-                      <ChevronLeft />
-                      Back
-                    </Button> */}
                     <Button
-                      onClick={handleLogin}
+                      onClick={handleSignUp}
                       disabled={
-                        data.name == "" ||
-                        data.phoneNo == "" ||
-                        data.aadhar == ""
+                        data.name === "" ||
+                        data.phoneNo === "" ||
+                        data.aadhar === "" ||
+                        loading
                       }
                       className="border border-gray-600 disabled:bg-gray-400"
-                      variant={"outline"}
+                      variant="outline"
                       type="submit"
                     >
-                      <img src={img} height={15} width={15} alt="Hi" />
-                      Login with Ethereum
+                      <img
+                        src={img}
+                        height={15}
+                        width={15}
+                        alt="Ethereum"
+                        className="mr-2"
+                      />
+                      {loading ? "Processing..." : "Login with Ethereum"}
                     </Button>
                   </div>
                 </DialogFooter>
-                {/* <DialogFooter>
-                  <div className="mt-2 flex justify-between gap-3">
-                    <DialogClose asChild>
-                      <Button variant="outline">
-                        <ChevronLeft />
-                        Cancel
-                      </Button>
-                    </DialogClose>
-                    <Button onClick={() => setNext(true)} className="w-full">
-                      Next
-                    </Button>
-                  </div>
-                </DialogFooter> */}
               </motion.div>
             ) : (
               <motion.div
@@ -234,7 +224,7 @@ const DonorLogin = () => {
                 transition={{ duration: 0.3 }}
               >
                 <div className="grid gap-4 py-4">
-                  <Label htmlFor="name">Enter OTP</Label>
+                  <Label htmlFor="otp">Enter OTP</Label>
                   <InputOTP maxLength={6}>
                     <InputOTPGroup>
                       <InputOTPSlot index={0} />
@@ -258,11 +248,18 @@ const DonorLogin = () => {
                     </Button>
                     <Button
                       onClick={handleSignUp}
-                      variant={"outline"}
+                      variant="outline"
                       type="submit"
+                      disabled={loading}
                     >
-                      <img src={img} height={15} width={15} alt="Hi" />
-                      Login with Ethereum
+                      <img
+                        src={img}
+                        height={15}
+                        width={15}
+                        alt="Ethereum"
+                        className="mr-2"
+                      />
+                      {loading ? "Processing..." : "Login with Ethereum"}
                     </Button>
                   </div>
                 </DialogFooter>

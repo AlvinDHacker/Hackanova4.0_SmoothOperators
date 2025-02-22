@@ -114,12 +114,40 @@ const Emergency = () => {
   const [sepoliaEth, setSepoliaEth] = useState<string>("");
   const [convertedAmount, setConvertedAmount] = useState<number>(0);
 
-  const fetchArticles = async (endpoint = "/emergency-news") => {
+  const fetchArticles = async (endpoint = "/api/disasters") => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}${endpoint}`);
+
+      if (endpoint === "/api/disasters") {
+        const newsResponse = await fetch(`${API_BASE_URL}/emergency-news`);
+        const newsData = await newsResponse.json();
+
+        await fetch("/api/disasters", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newsData.articles),
+        });
+      }
+
+      let queryEndpoint = "/api/disasters";
+      if (endpoint.includes("by-type")) {
+        queryEndpoint += `?type=${endpoint.split("/").pop()}`;
+      } else if (endpoint.includes("by-severity")) {
+        queryEndpoint += `?severity=${endpoint.split("/").pop()}`;
+      } else if (endpoint.includes("search")) {
+        queryEndpoint += `?search=${endpoint.split("/").pop()}`;
+      }
+
+      const response = await fetch(queryEndpoint, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       const data = await response.json();
-      setArticles(data.articles || []);
+      setArticles(data.disasters || []);
       setError(null);
     } catch (err) {
       setError("Failed to fetch emergency news");
