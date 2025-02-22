@@ -124,7 +124,7 @@ const DisasterSingle: React.FC<DisasterSingleProps> = ({ location }) => {
             </CardHeader>
             <CardContent>
               <NumberTicker
-                value={50}
+                value={120}
                 className="whitespace-pre-wrap text-8xl font-medium tracking-tighter text-black dark:text-white"
               />
             </CardContent>
@@ -136,7 +136,7 @@ const DisasterSingle: React.FC<DisasterSingleProps> = ({ location }) => {
             </CardHeader>
             <CardContent>
               <NumberTicker
-                value={100}
+                value={3}
                 className="whitespace-pre-wrap text-8xl font-medium tracking-tighter text-black dark:text-white"
               />
             </CardContent>
