@@ -27,6 +27,12 @@ enum FocusArea {
     OTHER
 }
 
+enum Severity {
+    HIGH
+    MEDIUM
+    LOW
+}
+
 model User {
     id       String   @id @default(cuid())
     name     String?
@@ -91,6 +97,7 @@ model Disaster {
     description  String
     locationLat  Float
     locationLong Float
+    severity     Severity       @default(HIGH)
     status       DisasterStatus @default(ACTIVE)
     amountUsed   Float          @default(0.0)
     createdAt    DateTime       @default(now())
